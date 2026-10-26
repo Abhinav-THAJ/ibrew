@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
 import {
-  Heart,
+  // Heart,
   Menu,
   ShoppingBag,
   User,
@@ -71,7 +73,7 @@ export default function Header() {
 
   const actions = [
     { label: "Login", href: "/login", Icon: User },
-    { label: "Wishlist", href: "/wishlist", Icon: Heart },
+    // { label: "Wishlist", href: "/wishlist", Icon: Heart },
   ];
 
   return (
@@ -79,14 +81,26 @@ export default function Header() {
       {/* Main header */}
       <header className="sticky top-0 z-50 border-0 bg-white text-black shadow-none">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:h-[72px] sm:px-6 lg:px-8">
-          {/* Logo */}
-          <Link
-            href="/"
-            onClick={() => setMenuOpen(false)}
-            className="shrink-0 text-lg font-bold tracking-tight text-black transition-opacity hover:opacity-70 sm:text-xl"
-          >
-            Imaan&apos;s Store
-          </Link>
+         
+          
+{/* Logo */}
+<Link
+  href="/"
+  onClick={() => setMenuOpen(false)}
+  className="shrink-0 pt-4 transition-opacity hover:opacity-80"
+>
+  <Image
+    src="/images/logo.png?v=2"
+    alt="Imaan's Store"
+    width={300}
+    height={150}
+    
+    priority
+    unoptimized
+    className="h-auto w-40 object-contain sm:w-48 md:w-56 lg:w-84"
+  />
+</Link>
+
 
           {/* Desktop navigation */}
           <ul className="hidden items-center gap-5 md:flex lg:gap-8">
@@ -174,16 +188,7 @@ export default function Header() {
                 </Link>
               </li>
 
-              <li>
-                <Link
-                  href="/wishlist"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-black transition hover:bg-neutral-100"
-                >
-                  <Heart size={18} />
-                  Wishlist
-                </Link>
-              </li>
+              
             </ul>
           </div>
         )}

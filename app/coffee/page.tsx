@@ -183,7 +183,7 @@ export default function CoffeePage() {
 
             <div className="relative aspect-[5/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#75543b] to-[#302117]">
               <Image
-                src="/images/coffee/coffee-collection.avif"
+                src="/images/coffee/coffee-collection.jpeg"
                 alt="The Coffee Collection"
                 fill
                 priority
