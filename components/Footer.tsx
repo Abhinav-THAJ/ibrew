@@ -238,8 +238,7 @@ export default function Footer() {
           {/* Copyright */}
           <div className="mt-6 flex flex-col gap-3 border-t border-white/20 pt-5 text-xs text-[#fff8ef]/75 sm:flex-row sm:items-center sm:justify-between">
             <p>
-              © {new Date().getFullYear()} Imaan&apos;s Store. All rights
-              reserved.
+© 2026 Imaan&apos;s Store. All rights reserved.              reserved.
             </p>
 
             <a
