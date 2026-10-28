@@ -224,7 +224,7 @@ function Hero({ onPick }: { onPick: (tab: TabKey) => void }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(
       () => setIndex((i) => (i + 1) % heroSlides.length),
-      3500
+      3000
     );
     return () => clearInterval(id);
   }, [paused]);
@@ -236,10 +236,10 @@ function Hero({ onPick }: { onPick: (tab: TabKey) => void }) {
       <div
         className="relative h-[520px] w-full overflow-hidden sm:h-[440px] lg:h-[560px]"
         style={{ backgroundColor: INK }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onTouchStart={() => setPaused(true)}
-        onTouchEnd={() => setPaused(false)}
+        // onMouseEnter={() => setPaused(true)}
+        // onMouseLeave={() => setPaused(false)}
+        // onTouchStart={() => setPaused(true)}
+        // onTouchEnd={() => setPaused(false)}
       >
         {/* Background slides */}
         {heroSlides.map((slide, i) => (

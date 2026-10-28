@@ -1,367 +1,946 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Figtree, Instrument_Serif } from "next/font/google";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
+import {
+  BedDouble,
+  ChevronDown,
+  Coffee,
+  Droplets,
+  Flower2,
+  Gem,
+  Heart,
+  Leaf,
+  Search,
+  ShoppingBag,
+  SlidersHorizontal,
+  Sofa,
+  Sparkles,
+  Wheat,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { useCart } from "@/components/CartContext";
 
-type Product = {
+// This page is self-contained: the card, filters and layout are all in this one file.
+
+// ---------------------------------------------------------------------------
+// COLOURS
+// ---------------------------------------------------------------------------
+// Shared palette for the four shop pages (coffee, spices, perfumes, beds).
+const INK = "#1F1A17";
+const CREAM = "#FFF9F3";
+const PASTEL = "#F3E7D5";
+const BURGUNDY = "#754747";
+const COPPER_L = "#9C5A2B";
+const MUTED = "rgba(31,26,23,0.65)";
+const LINE = "rgba(31,26,23,0.15)";
+const BORDER = "rgba(31,26,23,0.3)";
+
+const hideScrollbar = "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+
+// ---------------------------------------------------------------------------
+// FONTS
+// ---------------------------------------------------------------------------
+const display = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const body = Figtree({ subsets: ["latin"], display: "swap" });
+
+// ---------------------------------------------------------------------------
+// TYPES
+// ---------------------------------------------------------------------------
+type ShopProduct = {
+  /** Unique across the whole store (it is the cart / wishlist key). */
   id: number;
   slug: string;
   name: string;
+  /** Sub-category shown in the filter (e.g. "Whole Spices", "Queen Beds"). */
   category: string;
-  price: number;
-  mrp: number;
-  image: string;
   description: string;
+  /** Selling price in whole rupees. */
+  price: number;
+  /** Original price (MRP) in whole rupees, shown struck through. */
+  mrp?: number;
+  image: string;
+  /** Optional second image that fades in on hover. */
+  hoverImage?: string;
   badge?: string;
+  soldOut?: boolean;
+  /** Set once a product detail page exists; the card is not linked until then. */
+  href?: string;
 };
 
-const products: Product[] = [
-  {
-    id: 1,
-    slug: "oud-noir",
-    name: "Oud Noir Eau de Parfum",
-    category: "Men",
-    price: 1499,
-    mrp: 1999,
-    image: "/images/perfumeoil/oud.jpg",
-    description: "A rich, woody fragrance for a confident impression.",
-    badge: "Bestseller",
-  },
-  {
-    id: 2,
-    slug: "royal-amber",
-    name: "Royal Amber",
-    category: "Unisex",
-    price: 1799,
-    mrp: 2299,
-    image: "/images/perfumeoil/amber.jpg",
-    description: "A warm amber-inspired fragrance for day and evening.",
-  },
-  {
-    id: 3,
-    slug: "floral-blush",
-    name: "Floral Blush",
-    category: "Women",
-    price: 1299,
-    mrp: 1699,
-    image: "/images/perfumeoil/floral.jpg",
-    description: "A delicate floral scent with an elegant character.",
-    badge: "Popular",
-  },
-  {
-    id: 4,
-    slug: "midnight-musk",
-    name: "Midnight Musk",
-    category: "Men",
-    price: 2199,
-    mrp: 2799,
-    image: "/images/perfumeoil/musk.jpg",
-    description: "A deep, evening-inspired fragrance profile.",
-  },
-  {
-    id: 5,
-    slug: "rose-velvet",
-    name: "Rose Velvet",
-    category: "Women",
-    price: 1399,
-    mrp: 1799,
-    image: "/images/perfumeoil/rose.jpg",
-    description: "A rose-inspired fragrance for an elegant everyday touch.",
-  },
-  {
-    id: 6,
-    slug: "citrus-fresh",
-    name: "Citrus Fresh",
-    category: "Men",
-    price: 1199,
-    mrp: 1599,
-    image: "/images/perfumeoil/citrus.jpg",
-    description: "A fresh, bright fragrance for everyday wear.",
-  },
-  {
-    id: 7,
-    slug: "vanilla-musk",
-    name: "Vanilla Musk",
-    category: "Unisex",
-    price: 1599,
-    mrp: 1999,
-    image: "/images/perfumeoil/vanilla.jpg",
-    description: "A smooth, warm fragrance with a comforting character.",
-  },
-  {
-    id: 8,
-    slug: "signature-perfume-oil",
-    name: "Signature Perfume Oil",
-    category: "Perfume Oils",
-    price: 899,
-    mrp: 1199,
-    image: "/images/perfumeoil/perfume-oil.jpg",
-    description: "A concentrated perfume oil for your fragrance collection.",
-    badge: "Featured",
-  },
-];
+type FeatureIconName =
+  | "coffee"
+  | "sparkles"
+  | "droplets"
+  | "leaf"
+  | "wheat"
+  | "flower"
+  | "gem"
+  | "bed"
+  | "sofa";
 
-const categories = ["All", "Men", "Women", "Unisex", "Perfume Oils"];
+type ShopFeature = { title: string; text: string; icon: FeatureIconName };
 
-export default function PerfumeOilPage() {
-  const { addToCart } = useCart();
+// ---------------------------------------------------------------------------
+// WISHLIST (saved in this browser only)
+// ---------------------------------------------------------------------------
+// Browser-local wishlist. It is stored under one key so every shop page
+// shares it. It will move to the customer's account once login exists.
+const KEY = "imaan-wishlist";
+const listeners = new Set<() => void>();
 
-  const [category, setCategory] = useState("All");
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("featured");
+function read(): string {
+  try {
+    return localStorage.getItem(KEY) ?? "[]";
+  } catch {
+    return "[]";
+  }
+}
 
-  const visibleProducts = useMemo(() => {
-    let result = products.filter((product) => {
-      const matchesCategory =
-        category === "All" || product.category === category;
+function parse(raw: string): number[] {
+  try {
+    const value: unknown = JSON.parse(raw);
+    return Array.isArray(value) ? value.filter((n): n is number => typeof n === "number") : [];
+  } catch {
+    return [];
+  }
+}
 
-      const searchText =
-        `${product.name} ${product.description} ${product.category}`.toLowerCase();
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    listeners.delete(callback);
+    window.removeEventListener("storage", callback);
+  };
+}
 
-      const matchesSearch = searchText.includes(
-        search.trim().toLowerCase()
-      );
+function useWishlist() {
+  const raw = useSyncExternalStore(subscribe, read, () => "[]");
+  const ids = useMemo(() => parse(raw), [raw]);
 
-      return matchesCategory && matchesSearch;
-    });
-
-    if (sort === "low") {
-      result = [...result].sort((a, b) => a.price - b.price);
+  const toggle = useCallback((id: number) => {
+    const current = parse(read());
+    const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
+    try {
+      localStorage.setItem(KEY, JSON.stringify(next));
+    } catch {
+      /* storage unavailable (private mode): nothing to persist */
     }
+    listeners.forEach((l) => l());
+  }, []);
 
-    if (sort === "high") {
-      result = [...result].sort((a, b) => b.price - a.price);
-    }
+  return { ids, toggle };
+}
 
-    if (sort === "name") {
-      result = [...result].sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-    }
+// ---------------------------------------------------------------------------
+// SMALL UI CONTROLS
+// ---------------------------------------------------------------------------
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <ChevronDown
+      aria-hidden
+      strokeWidth={1.5}
+      className={`h-5 w-5 shrink-0 transition ${open ? "rotate-180" : ""}`}
+    />
+  );
+}
 
-    return result;
-  }, [category, search, sort]);
+// Round selector used instead of a square checkbox. Works as checkbox or radio.
+function CircleOption({
+  type,
+  name,
+  checked,
+  onChange,
+  label,
+  className = "",
+  disabled,
+}: {
+  type: "checkbox" | "radio";
+  name?: string;
+  checked: boolean;
+  onChange: () => void;
+  label: string;
+  className?: string;
+  disabled?: boolean;
+}) {
+  return (
+    <label
+      className={`flex items-center gap-3 ${
+        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+      } ${className}`}
+    >
+      <input
+        type={type}
+        name={name}
+        checked={checked}
+        onChange={onChange}
+        disabled={disabled}
+        className="peer sr-only"
+      />
+      <span
+        aria-hidden
+        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#754747]/70 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#FFF9F3]"
+        style={{ borderColor: checked ? BURGUNDY : "rgba(31,26,23,0.45)" }}
+      >
+        <span
+          className={`h-2 w-2 rounded-full transition-transform duration-200 ${
+            checked ? "scale-100" : "scale-0"
+          }`}
+          style={{ background: BURGUNDY }}
+        />
+      </span>
+      <span>{label}</span>
+    </label>
+  );
+}
 
-  const formatPrice = (price: number) =>
-    `₹${price.toLocaleString("en-IN")}`;
+// Custom sort dropdown so the highlight colour matches the theme.
+function SortDropdown({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", esc);
+    };
+  }, []);
+
+  const current = options.find((o) => o.value === value)?.label ?? "";
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#081426] text-[#F5F7FF]">
-      {/* Hero section */}
-      <section className="px-4 pb-10 pt-6 sm:px-8 lg:px-12 lg:pt-8">
-        <div className="mx-auto grid max-w-7xl overflow-hidden rounded-2xl border border-[#293B57] bg-[#0B1B33] md:grid-cols-2">
-          <div className="flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8FAAFF] sm:tracking-[0.28em]">
-              Imaans Store · Fragrance Collection
-            </p>
-
-            <h1 className="mt-5 text-4xl font-medium leading-tight text-white sm:text-5xl lg:text-6xl">
-              Discover Your
-              <span className="block font-serif italic text-[#8FAAFF]">
-                Signature Scent
-              </span>
-            </h1>
-
-            <p className="mt-5 max-w-lg text-sm leading-7 text-[#B8C4D9] sm:text-base">
-              Explore imported fragrances, perfume oils and memorable
-              scents for everyday wear and special occasions.
-            </p>
-
-            <a
-              href="#products"
-              className="mt-8 w-fit rounded-full bg-[#4169E1] px-7 py-3.5 text-sm font-medium text-white transition hover:bg-[#5B7CFA]"
-            >
-              Explore Perfumes →
-            </a>
-          </div>
-
-          <div className="relative h-[300px] overflow-hidden bg-[#10213A] sm:h-[400px] md:h-full md:min-h-[460px]">
-            <img
-              src="/images/perfumeoil/banner.avif"
-              alt="Perfume collection"
-              className="absolute inset-0 h-full w-full object-cover object-center"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Product section */}
-      <section
-        id="products"
-        className="mx-auto max-w-7xl scroll-mt-6 px-4 pb-20 sm:px-8 lg:px-12"
+    <div ref={ref} className="relative w-full sm:w-52">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Sort products. Current: ${current}`}
+        className="flex w-full items-center justify-between border bg-white px-4 py-2.5 text-left text-sm normal-case tracking-[0.03em] outline-none focus-visible:border-[#754747]"
+        style={{ borderColor: open ? BURGUNDY : BORDER, color: INK }}
       >
-        <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8FAAFF]">
-              Fragrance for every occasion
-            </p>
+        <span>{current}</span>
+        <Chevron open={open} />
+      </button>
 
-            <h2 className="mt-2 text-3xl font-medium text-white sm:text-4xl">
-              Shop Perfumes
-            </h2>
-          </div>
-
-          <p className="text-sm text-[#B8C4D9]">
-            {visibleProducts.length} products
-          </p>
-        </div>
-
-        {/* Search and sorting */}
-        <div className="mb-5 grid gap-3 sm:grid-cols-[1fr_auto]">
-          <input
-            type="search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search perfumes..."
-            aria-label="Search perfumes"
-            className="min-w-0 rounded-lg border border-[#293B57] bg-[#10213A] px-4 py-3 text-sm text-white outline-none placeholder:text-[#B8C4D9] focus:border-[#4169E1] focus:ring-1 focus:ring-[#4169E1]"
-          />
-
-          <select
-            value={sort}
-            onChange={(event) => setSort(event.target.value)}
-            aria-label="Sort perfumes"
-            className="rounded-lg border border-[#293B57] bg-[#10213A] px-4 py-3 text-sm text-white outline-none focus:border-[#4169E1]"
-          >
-            <option value="featured">Featured</option>
-            <option value="low">Price: Low to High</option>
-            <option value="high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
-          </select>
-        </div>
-
-        {/* Category filters */}
-        <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-          {categories.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setCategory(item)}
-              aria-pressed={category === item}
-              className={`shrink-0 rounded-full border px-5 py-2.5 text-sm transition ${
-                category === item
-                  ? "border-[#4169E1] bg-[#4169E1] text-white"
-                  : "border-[#293B57] bg-[#10213A] text-[#F5F7FF] hover:border-[#4169E1] hover:text-[#8FAAFF]"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-
-        {/* Product grid */}
-        {visibleProducts.length > 0 ? (
-          <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6">
-            {visibleProducts.map((product) => (
-              <article
-                key={product.slug}
-                className="group flex h-full min-w-0 flex-col rounded-xl border border-[#293B57] bg-[#10213A] p-2.5 transition duration-300 hover:border-[#4169E1] sm:p-4"
-              >
-                {/* Product image */}
-                <a
-                  href={`/product/${product.slug}`}
-                  aria-label={`View ${product.name}`}
-                  className="relative block aspect-[4/5] shrink-0 overflow-hidden rounded-lg bg-[#0B1B33]"
+      {open && (
+        <ul
+          role="listbox"
+          className="absolute right-0 top-full z-30 mt-1 w-full overflow-hidden border bg-white shadow-[0_10px_30px_rgba(31,26,23,0.15)]"
+          style={{ borderColor: BORDER }}
+        >
+          {options.map((o) => {
+            const active = o.value === value;
+            return (
+              <li key={o.value} role="option" aria-selected={active}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(o.value);
+                    setOpen(false);
+                  }}
+                  className={`block w-full px-4 py-2.5 text-left text-sm normal-case tracking-[0.03em] transition-colors ${
+                    active ? "bg-[#754747] text-[#FFF9F3]" : "text-[#1F1A17] hover:bg-[#F3E7D5]"
+                  }`}
                 >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
+                  {o.label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
 
-                  {product.badge && (
-                    <span className="absolute left-2 top-2 rounded-full bg-[#081426]/95 px-2.5 py-1 text-[10px] font-semibold text-[#AFC2FF] sm:text-xs">
-                      {product.badge}
-                    </span>
-                  )}
-                </a>
+// ---------------------------------------------------------------------------
+// PRODUCT CARD
+// ---------------------------------------------------------------------------
+const formatPrice = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
-                {/* Product information */}
-                <div className="flex flex-1 flex-col">
-                  <p className="mt-3 text-[10px] uppercase tracking-widest text-[#8FAAFF] sm:mt-4 sm:text-xs">
-                    {product.category}
-                  </p>
+const SIZES = "(max-width: 639px) 50vw, (max-width: 1279px) 33vw, 25vw";
 
-                  <h3 className="mt-1 min-h-10 text-sm font-semibold leading-5 text-white sm:min-h-12 sm:text-base sm:leading-6">
-                    {product.name}
-                  </h3>
+// Shown when a product image file is missing or fails to load.
+function MissingImage({ name }: { name: string }) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center"
+      style={{ background: PASTEL }}
+    >
+      <span className={`${display.className} text-lg leading-tight`} style={{ color: INK }}>
+        {name}
+      </span>
+      <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: MUTED }}>
+        Photo coming soon
+      </span>
+    </div>
+  );
+}
 
-                  <p className="mt-1 line-clamp-2 min-h-10 text-xs leading-5 text-[#B8C4D9] sm:text-sm">
-                    {product.description}
-                  </p>
+function MaybeLink({
+  href,
+  label,
+  className,
+  children,
+}: {
+  href?: string;
+  label: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  // Cards only become links once a detail page exists, so there are no dead links.
+  return href ? (
+    <Link href={href} aria-label={label} className={className}>
+      {children}
+    </Link>
+  ) : (
+    <div className={className}>{children}</div>
+  );
+}
 
-                  {/* Prices */}
-                  <div className="mt-3 flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1">
-                    <span className="text-sm font-bold text-white sm:text-base">
-                      {formatPrice(product.price)}
-                    </span>
+function ProductCard({
+  product: p,
+  wished,
+  onToggleWish,
+  onAddToCart,
+}: {
+  product: ShopProduct;
+  wished: boolean;
+  onToggleWish: (id: number) => void;
+  onAddToCart: (p: ShopProduct) => void;
+}) {
+  const [broken, setBroken] = useState(false);
+  const [added, setAdded] = useState(false);
 
-                    <span className="text-xs text-[#91A0B8] line-through">
-                      {formatPrice(product.mrp)}
-                    </span>
-                  </div>
+  // The "Added" confirmation resets after 1.8 seconds.
+  useEffect(() => {
+    if (!added) return;
+    const t = setTimeout(() => setAdded(false), 1800);
+    return () => clearTimeout(t);
+  }, [added]);
 
-                  {/* Shared cart integration */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      addToCart({
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        image: product.image,
-                      })
-                    }
-                    className="mt-auto mt-4 w-full rounded-full border border-[#4169E1] bg-[#4169E1] px-2 py-2.5 text-xs font-medium text-white transition hover:border-[#5B7CFA] hover:bg-[#5B7CFA] focus:outline-none focus:ring-2 focus:ring-[#8FAAFF] focus:ring-offset-2 focus:ring-offset-[#10213A] sm:px-3 sm:text-sm"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-xl border border-[#293B57] bg-[#10213A] px-4 py-16 text-center">
-            <p className="text-sm text-[#B8C4D9]">
-              No perfumes found. Try another search.
-            </p>
+  const handleAdd = () => {
+    if (p.soldOut) return;
+    onAddToCart(p);
+    setAdded(true);
+  };
 
-            <button
-              type="button"
-              onClick={() => {
-                setSearch("");
-                setCategory("All");
-              }}
-              className="mt-4 rounded-full bg-[#4169E1] px-5 py-2.5 text-sm text-white transition hover:bg-[#5B7CFA]"
-            >
-              Clear Filters
-            </button>
-          </div>
+  const hasHover = !!p.hoverImage && !broken;
+
+  return (
+    <article className="flex min-w-0 flex-col text-center">
+      {/* image, badge and wishlist heart */}
+      <div className="group relative overflow-hidden" style={{ background: PASTEL }}>
+        <MaybeLink href={p.href} label={p.name} className="relative block aspect-square w-full">
+          {broken ? (
+            <MissingImage name={p.name} />
+          ) : (
+            <>
+              <Image
+                src={p.image}
+                alt={p.name}
+                fill
+                sizes={SIZES}
+                onError={() => setBroken(true)}
+                className={`object-cover transition duration-700 ${
+                  hasHover ? "group-hover:opacity-0" : "group-hover:scale-105"
+                } ${p.soldOut ? "opacity-60" : ""}`}
+              />
+              {hasHover && (
+                <Image
+                  src={p.hoverImage!}
+                  alt={`${p.name} alternate view`}
+                  fill
+                  sizes={SIZES}
+                  className="object-cover opacity-0 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                />
+              )}
+            </>
+          )}
+        </MaybeLink>
+
+        {p.badge && (
+          <span
+            className="pointer-events-none absolute left-0 top-3 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.15em] text-white sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.2em]"
+            style={{ background: COPPER_L }}
+          >
+            {p.badge}
+          </span>
         )}
 
-        {/* Promotional section */}
-        <div className="mt-16 rounded-2xl border border-[#293B57] bg-[#10213A] px-6 py-10 text-center sm:py-14">
-          <p className="text-xs uppercase tracking-[0.25em] text-[#8FAAFF]">
-            Imaans Store
-          </p>
-
-          <h2 className="mt-3 text-2xl font-medium text-white sm:text-3xl">
-            A fragrance that feels like you.
-          </h2>
-
-          <p className="mt-3 text-sm text-[#B8C4D9]">
-            Find a scent that complements your style and your moments.
-          </p>
-
-          <a
-            href="#products"
-            className="mt-6 inline-block rounded-full bg-[#4169E1] px-7 py-3 text-sm font-medium text-white transition hover:bg-[#5B7CFA]"
+        {p.soldOut && (
+          <span
+            className="pointer-events-none absolute bottom-2 left-2 bg-white/90 px-2 py-1 text-[9px] uppercase tracking-[0.25em] sm:text-[10px]"
+            style={{ color: BURGUNDY }}
           >
-            Shop Perfumes
-          </a>
+            Sold out
+          </span>
+        )}
+
+        <button
+          type="button"
+          onClick={() => onToggleWish(p.id)}
+          aria-pressed={wished}
+          aria-label={wished ? `Remove ${p.name} from wishlist` : `Add ${p.name} to wishlist`}
+          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#754747]"
+          style={{ color: wished ? BURGUNDY : INK }}
+        >
+          <Heart
+            aria-hidden
+            className="h-[18px] w-[18px]"
+            strokeWidth={1.5}
+            fill={wished ? BURGUNDY : "none"}
+          />
+        </button>
+      </div>
+
+      {/* category, name and price */}
+      <MaybeLink href={p.href} label={p.name} className="block">
+        <p className="mt-4 text-[10px] uppercase tracking-[0.25em] sm:mt-5" style={{ color: MUTED }}>
+          {p.category}
+        </p>
+        <h3
+          className={`${display.className} mx-auto mt-1.5 line-clamp-2 min-h-[2.6em] max-w-[22ch] text-[17px] leading-[1.3] sm:text-xl`}
+          style={{ color: INK }}
+        >
+          {p.name}
+        </h3>
+        <p className="mt-1.5 flex flex-wrap items-baseline justify-center gap-x-2 text-sm">
+          <span className="font-medium" style={{ color: BURGUNDY }}>
+            {formatPrice(p.price)}
+          </span>
+          {p.mrp && p.mrp > p.price && (
+            <span className="text-xs line-through" style={{ color: MUTED }}>
+              {formatPrice(p.mrp)}
+            </span>
+          )}
+        </p>
+      </MaybeLink>
+
+      <button
+        type="button"
+        onClick={handleAdd}
+        disabled={p.soldOut}
+        aria-live="polite"
+        className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors hover:bg-[#754747] hover:text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
+        style={{ borderColor: BURGUNDY, color: BURGUNDY }}
+      >
+        {p.soldOut ? (
+          "Sold out"
+        ) : added ? (
+          "Added ✓"
+        ) : (
+          <>
+            Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
+          </>
+        )}
+      </button>
+    </article>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SHOP PAGE LAYOUT
+// ---------------------------------------------------------------------------
+const ICONS: Record<FeatureIconName, LucideIcon> = {
+  coffee: Coffee,
+  sparkles: Sparkles,
+  droplets: Droplets,
+  leaf: Leaf,
+  wheat: Wheat,
+  flower: Flower2,
+  gem: Gem,
+  bed: BedDouble,
+  sofa: Sofa,
+};
+
+const SORTS = [
+  { value: "featured", label: "Featured" },
+  { value: "az", label: "Alphabetically, A-Z" },
+  { value: "za", label: "Alphabetically, Z-A" },
+  { value: "low", label: "Price, low to high" },
+  { value: "high", label: "Price, high to low" },
+];
+
+const PAGE_SIZE = 9;
+
+type ShopPageProps = {
+  title: string;
+  crumb: string;
+  tagline: string;
+  intro: string;
+  banner: string;
+  facetTitle: string;
+  facetOptions: string[];
+  searchPlaceholder: string;
+  products: ShopProduct[];
+  features: ShopFeature[];
+};
+
+function ShopPage({
+  title,
+  crumb,
+  tagline,
+  intro,
+  banner,
+  facetTitle,
+  facetOptions,
+  searchPlaceholder,
+  products,
+  features,
+}: ShopPageProps) {
+  const { addToCart } = useCart();
+  const wishlist = useWishlist();
+
+  const [sort, setSort] = useState("featured");
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [inStockOnly, setInStockOnly] = useState(false);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const [openGroups, setOpenGroups] = useState({ facet: true, price: true });
+  const [mobileFilters, setMobileFilters] = useState(false);
+
+  // The in-stock toggle only appears when at least one product can be sold out.
+  const hasStockInfo = products.some((p) => p.soldOut);
+
+  const toggleOption = (value: string) => {
+    setSelected((s) => (s.includes(value) ? s.filter((v) => v !== value) : [...s, value]));
+    setVisible(PAGE_SIZE);
+  };
+
+  const activeCount = selected.length + (inStockOnly ? 1 : 0) + (minPrice || maxPrice ? 1 : 0);
+
+  const clearAll = () => {
+    setSelected([]);
+    setInStockOnly(false);
+    setMinPrice("");
+    setMaxPrice("");
+    setQuery("");
+    setSort("featured");
+    setVisible(PAGE_SIZE);
+  };
+
+  // Lock page scroll and close on Escape while the mobile drawer is open.
+  useEffect(() => {
+    if (!mobileFilters) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setMobileFilters(false);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", esc);
+    };
+  }, [mobileFilters]);
+
+  const filtered = useMemo(() => {
+    const min = minPrice ? Number(minPrice) : 0;
+    const max = maxPrice ? Number(maxPrice) : Infinity;
+    const q = query.trim().toLowerCase();
+
+    const list = products.filter((p) => {
+      if (inStockOnly && p.soldOut) return false;
+      if (p.price < min || p.price > max) return false;
+      if (selected.length && !selected.includes(p.category)) return false;
+      if (q && !`${p.name} ${p.description} ${p.category}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    switch (sort) {
+      case "az":
+        list.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "za":
+        list.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "low":
+        list.sort((a, b) => a.price - b.price);
+        break;
+      case "high":
+        list.sort((a, b) => b.price - a.price);
+        break;
+    }
+    return list;
+  }, [products, sort, selected, inStockOnly, minPrice, maxPrice, query]);
+
+  const shown = filtered.slice(0, visible);
+
+  const priceInput =
+    "w-full min-w-0 border bg-white px-3 py-2 text-sm text-[#1F1A17] outline-none placeholder:text-[#1F1A17]/40 focus:border-[#754747]";
+  const groupButton = "flex w-full items-center justify-between text-left text-sm uppercase tracking-[0.25em]";
+  const outlineButton =
+    "border text-xs uppercase tracking-[0.3em] transition-colors hover:bg-[#754747] hover:text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747]";
+
+  const filtersPanel = (
+    <div>
+      {activeCount > 0 && (
+        <button
+          type="button"
+          onClick={clearAll}
+          className="mb-6 text-xs uppercase tracking-[0.3em] underline underline-offset-4"
+          style={{ color: BURGUNDY }}
+        >
+          Clear all ({activeCount})
+        </button>
+      )}
+
+      <div className="border-b py-5" style={{ borderColor: LINE }}>
+        <button
+          type="button"
+          onClick={() => setOpenGroups((o) => ({ ...o, facet: !o.facet }))}
+          aria-expanded={openGroups.facet}
+          className={groupButton}
+        >
+          <span>{facetTitle}</span>
+          <Chevron open={openGroups.facet} />
+        </button>
+        {openGroups.facet && (
+          <ul className="mt-4 space-y-3">
+            {facetOptions.map((opt) => (
+              <li key={opt}>
+                <CircleOption
+                  type="checkbox"
+                  checked={selected.includes(opt)}
+                  onChange={() => toggleOption(opt)}
+                  label={opt}
+                  className="text-sm"
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="border-b py-5" style={{ borderColor: LINE }}>
+        <button
+          type="button"
+          onClick={() => setOpenGroups((o) => ({ ...o, price: !o.price }))}
+          aria-expanded={openGroups.price}
+          className={groupButton}
+        >
+          <span>Price</span>
+          <Chevron open={openGroups.price} />
+        </button>
+        {openGroups.price && (
+          <div className="mt-4 flex items-center gap-3">
+            <input
+              type="number"
+              min={0}
+              inputMode="numeric"
+              aria-label="Minimum price"
+              placeholder="₹ Min"
+              value={minPrice}
+              onChange={(e) => {
+                setMinPrice(e.target.value);
+                setVisible(PAGE_SIZE);
+              }}
+              className={priceInput}
+              style={{ borderColor: BORDER }}
+            />
+            <span aria-hidden style={{ color: MUTED }}>
+              -
+            </span>
+            <input
+              type="number"
+              min={0}
+              inputMode="numeric"
+              aria-label="Maximum price"
+              placeholder="₹ Max"
+              value={maxPrice}
+              onChange={(e) => {
+                setMaxPrice(e.target.value);
+                setVisible(PAGE_SIZE);
+              }}
+              className={priceInput}
+              style={{ borderColor: BORDER }}
+            />
+          </div>
+        )}
+      </div>
+
+      {hasStockInfo && (
+        <div className="py-5 text-sm uppercase tracking-[0.25em]">
+          <CircleOption
+            type="checkbox"
+            checked={inStockOnly}
+            onChange={() => {
+              setInStockOnly((v) => !v);
+              setVisible(PAGE_SIZE);
+            }}
+            label="In stock only"
+          />
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className={`${body.className} min-h-screen overflow-x-hidden`} style={{ background: CREAM, color: INK }}>
+      {/* ---------- HERO (full background image + dark overlay) ---------- */}
+      <section className="relative overflow-hidden bg-black text-white">
+        <Image src={banner} alt="" fill priority sizes="100vw" className="object-cover" />
+        {/* Dark overlay so the white text stays readable. Change /60 to make it lighter or darker. */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        <div className="relative z-10 px-4 py-16 text-center sm:px-6 sm:py-20 md:py-28">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-4 text-[11px] uppercase tracking-[0.25em] sm:mb-5 sm:text-xs sm:tracking-[0.3em]"
+          >
+            <Link href="/" className="transition-colors hover:text-white/70">
+              Home
+            </Link>
+            <span className="mx-2 sm:mx-3" aria-hidden>
+              /
+            </span>
+            <span aria-current="page">{crumb}</span>
+          </nav>
+
+          {/* Normal font (Figtree) is used here, so there is no display.className */}
+          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl md:text-6xl">{title}</h1>
+          <p className="mt-3 text-lg sm:text-xl md:text-2xl">{tagline}</p>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-6 sm:mt-5 md:text-base">{intro}</p>
+          <div className="mx-auto mt-6 h-px w-24 bg-white sm:mt-7" />
         </div>
       </section>
-    </main>
+
+      {/* ---------- SHOP AREA ---------- */}
+      <section className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:pb-20 sm:pt-10">
+        {/* top bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-5" style={{ borderColor: LINE }}>
+          <div className="flex w-full items-center justify-between gap-4 sm:w-auto sm:justify-start sm:gap-5">
+            <button
+              type="button"
+              onClick={() => setMobileFilters(true)}
+              className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] sm:gap-3 sm:text-sm sm:tracking-[0.3em] lg:hidden"
+            >
+              <SlidersHorizontal aria-hidden className="h-5 w-5" strokeWidth={1.5} />
+              Filters{activeCount > 0 && ` (${activeCount})`}
+            </button>
+            <p aria-live="polite" className="text-[11px] uppercase tracking-[0.15em] sm:text-xs sm:tracking-[0.2em]" style={{ color: MUTED }}>
+              Showing {shown.length} of {filtered.length} products
+            </p>
+          </div>
+
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <label
+              className="flex w-full items-center gap-2 border bg-white px-3 focus-within:border-[#754747] sm:w-56"
+              style={{ borderColor: BORDER }}
+            >
+              <Search aria-hidden className="h-4 w-4 shrink-0" strokeWidth={1.5} style={{ color: MUTED }} />
+              <span className="sr-only">Search products</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setVisible(PAGE_SIZE);
+                }}
+                placeholder={searchPlaceholder}
+                className="w-full min-w-0 bg-transparent py-2.5 text-sm outline-none placeholder:text-[#1F1A17]/40"
+              />
+            </label>
+            <SortDropdown value={sort} onChange={setSort} options={SORTS} />
+          </div>
+        </div>
+
+        {/* quick sub-category chips (phones and tablets) */}
+        <div className={`${hideScrollbar} -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 lg:hidden`}>
+          {facetOptions.map((opt) => {
+            const on = selected.includes(opt);
+            return (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => toggleOption(opt)}
+                aria-pressed={on}
+                className="shrink-0 border px-4 py-2 text-xs uppercase tracking-[0.15em] transition-colors"
+                style={{
+                  borderColor: BURGUNDY,
+                  background: on ? BURGUNDY : "transparent",
+                  color: on ? CREAM : BURGUNDY,
+                }}
+              >
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 flex gap-10">
+          {/* sidebar (desktop) */}
+          <aside className="sticky top-6 hidden max-h-[calc(100vh-3rem)] w-64 shrink-0 self-start overflow-y-auto pr-2 [scrollbar-color:#c9b8a3_transparent] [scrollbar-width:thin] lg:block">
+            {filtersPanel}
+          </aside>
+
+          {/* grid */}
+          <div className="min-w-0 flex-1">
+            {filtered.length > 0 ? (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-10">
+                {shown.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    product={p}
+                    wished={wishlist.ids.includes(p.id)}
+                    onToggleWish={wishlist.toggle}
+                    onAddToCart={(item) =>
+                      addToCart({ id: item.id, name: item.name, price: item.price, image: item.image })
+                    }
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="py-16 text-center sm:py-20">
+                <p className={`${display.className} text-2xl`} style={{ color: BURGUNDY }}>
+                  No products found
+                </p>
+                <p className="mt-2 text-sm" style={{ color: MUTED }}>
+                  Try a different search or clear your filters.
+                </p>
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className={`${outlineButton} mt-6 px-6 py-2`}
+                  style={{ borderColor: BURGUNDY, color: BURGUNDY }}
+                >
+                  Clear filters
+                </button>
+              </div>
+            )}
+
+            {visible < filtered.length && (
+              <div className="mt-10 text-center sm:mt-12">
+                <button
+                  type="button"
+                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                  className={`${outlineButton} px-10 py-3`}
+                  style={{ borderColor: BURGUNDY, color: BURGUNDY }}
+                >
+                  Load more
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- FEATURES ---------- */}
+      <section className="border-y py-12 sm:py-16" style={{ borderColor: LINE, background: PASTEL }}>
+        <div className="mx-auto grid max-w-4xl gap-8 px-6 sm:grid-cols-3 sm:gap-10">
+          {features.map((f) => {
+            const Icon = ICONS[f.icon];
+            return (
+              <div key={f.title} className="text-center">
+                <Icon aria-hidden className="mx-auto h-9 w-9" strokeWidth={1.2} style={{ color: BURGUNDY }} />
+                <h2 className={`${display.className} mt-4 text-2xl`} style={{ color: INK }}>
+                  {f.title}
+                </h2>
+                <p className="mt-2 text-sm leading-6" style={{ color: MUTED }}>
+                  {f.text}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ---------- MOBILE FILTER DRAWER ---------- */}
+      {mobileFilters && (
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileFilters(false)} />
+          <div
+            className={`${hideScrollbar} absolute left-0 top-0 h-full w-80 max-w-[85%] overflow-y-auto border-r p-6`}
+            style={{ borderColor: LINE, background: CREAM, color: INK }}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className={`${display.className} text-2xl`}>Filters</h2>
+              <button type="button" onClick={() => setMobileFilters(false)} aria-label="Close filters">
+                <X aria-hidden className="h-6 w-6" strokeWidth={1.5} />
+              </button>
+            </div>
+            {filtersPanel}
+            <button
+              type="button"
+              onClick={() => setMobileFilters(false)}
+              className={`${outlineButton} mt-6 w-full py-3`}
+              style={{ borderColor: BURGUNDY, color: BURGUNDY }}
+            >
+              Show {filtered.length} products
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// THIS PAGE: PRODUCTS AND TEXT
+// ---------------------------------------------------------------------------
+// Ids start at 201 so they never collide with coffee (1-8) in the shared cart.
+const products: ShopProduct[] = [
+  { id: 201, slug: "oud-noir", name: "Oud Noir Eau de Parfum", category: "Men", description: "A rich, woody fragrance for a confident impression.", price: 1499, mrp: 1999, image: "/images/perfumeoil/oud.jpg", badge: "Bestseller" },
+  { id: 202, slug: "royal-amber", name: "Royal Amber", category: "Unisex", description: "A warm amber-inspired fragrance for day and evening.", price: 1799, mrp: 2299, image: "/images/perfumeoil/amber.jpg" },
+  { id: 203, slug: "floral-blush", name: "Floral Blush", category: "Women", description: "A delicate floral scent with an elegant character.", price: 1299, mrp: 1699, image: "/images/perfumeoil/floral.jpg", badge: "Popular" },
+  { id: 204, slug: "midnight-musk", name: "Midnight Musk", category: "Men", description: "A deep, evening-inspired fragrance profile.", price: 2199, mrp: 2799, image: "/images/perfumeoil/musk.jpg" },
+  { id: 205, slug: "rose-velvet", name: "Rose Velvet", category: "Women", description: "A rose-inspired fragrance for an elegant everyday touch.", price: 1399, mrp: 1799, image: "/images/perfumeoil/rose.jpg" },
+  { id: 206, slug: "citrus-fresh", name: "Citrus Fresh", category: "Men", description: "A fresh, bright fragrance for everyday wear.", price: 1199, mrp: 1599, image: "/images/perfumeoil/citrus.jpg" },
+  { id: 207, slug: "vanilla-musk", name: "Vanilla Musk", category: "Unisex", description: "A smooth, warm fragrance with a comforting character.", price: 1599, mrp: 1999, image: "/images/perfumeoil/vanilla.jpg" },
+  { id: 208, slug: "signature-perfume-oil", name: "Signature Perfume Oil", category: "Perfume Oils", description: "A concentrated perfume oil for your fragrance collection.", price: 899, mrp: 1199, image: "/images/perfumeoil/perfume-oil.jpg", badge: "Featured" },
+];
+
+export default function PerfumeOilPage() {
+  return (
+    <ShopPage
+      title="Shop All Perfumes"
+      crumb="Perfumes"
+      tagline="Discover your signature scent."
+      intro="Explore imported fragrances, perfume oils and memorable scents for everyday wear and special occasions."
+      banner="/images/perfumeoil/banner.avif"
+      facetTitle="Collection"
+      facetOptions={["Men", "Women", "Unisex", "Perfume Oils"]}
+      searchPlaceholder="Search perfumes..."
+      products={products}
+      features={[
+        { icon: "flower", title: "Imported Fragrances", text: "Imported scents for everyday wear and special occasions." },
+        { icon: "droplets", title: "Perfume Oils", text: "Concentrated oils for your fragrance collection." },
+        { icon: "sparkles", title: "For Every Moment", text: "Find a scent that complements your style." },
+      ]}
+    />
   );
 }
