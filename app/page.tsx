@@ -163,8 +163,8 @@ const heroSlides: {
   {
     key: "coffee",
     alt: "Fresh coffee",
-    desktop: "images/ibrewbanner.jpeg",
-    mobile: "images/ibrewbanner.jpeg",
+    desktop: "images/coffebags.png",
+    mobile: "images/coffebags.png",
   },
   {
     key: "spices",
