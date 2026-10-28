@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import { Fraunces, Figtree } from "next/font/google";
 
 // ---------- Fonts ----------
@@ -11,6 +11,15 @@ const display = Fraunces({
 });
 
 const body = Figtree({ subsets: ["latin"] });
+
+// ---------- Shared styles ----------
+// Hides the scrollbar on horizontal scroll areas (swipe still works).
+const hideScrollbar =
+  "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+
+// Horizontal swipe row on mobile that "snaps" card by card.
+// "-mx-5 px-5" lets the row bleed to the screen edge but keeps the first card aligned.
+const swipeRow = `-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 ${hideScrollbar}`;
 
 // ---------- Categories ----------
 type CategoryKey =
@@ -72,6 +81,8 @@ const categories: Record<CategoryKey, Category> = {
 };
 
 const categoryKeys = Object.keys(categories) as CategoryKey[];
+
+type TabKey = CategoryKey | "all";
 
 // ---------- Products ----------
 type Product = {
@@ -258,41 +269,51 @@ function formatPrice(amount: number) {
 // ---------- Announcement ----------
 function AnnouncementBar() {
   return (
-    <div className="bg-[#2B1810] px-4 py-2 text-center text-sm text-white">
+    <div className="bg-[#2B1810] px-4 py-2 text-center text-xs text-white sm:text-sm">
       Free shipping on prepaid orders above ₹999
     </div>
   );
 }
 
-// ---------- Hero with Image Arches ----------
+// ---------- Hero ----------
+// Mobile: swipeable row of arches. Tablet and up: a normal grid.
 function Hero() {
   return (
-    <section className="mx-auto max-w-6xl px-5 pb-16 pt-12 text-center sm:px-6 md:pt-14">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#8A6045]">
-        Welcome to Imaan&apos;s Store
-      </p>
+    <section className="mx-auto max-w-6xl px-5 pb-10 pt-8 sm:px-6 sm:pb-16 sm:pt-12 md:pt-14">
+      <div className="text-center">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#8A6045]">
+          Welcome to Imaan&apos;s Store
+        </p>
 
-      <h1
-        className={`${display.className} mx-auto max-w-3xl text-4xl leading-tight text-[#2B1810] sm:text-5xl md:text-6xl`}
+        <h1
+          className={`${display.className} mx-auto max-w-3xl text-[28px] leading-[1.15] text-[#2B1810] sm:text-5xl md:text-6xl`}
+        >
+          Coffee, spices, scents and sleep, brought home from around the world.
+        </h1>
+
+        <p className="mx-auto mt-4 max-w-xl text-[15px] text-neutral-600 sm:text-lg">
+          Explore everyday essentials and little luxuries for your home.
+        </p>
+
+        <a
+          href="#best-sellers"
+          className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-[#2B1810] px-8 text-sm font-semibold text-white active:scale-95 sm:hidden"
+        >
+          Shop now
+        </a>
+      </div>
+
+      <div
+        className={`${swipeRow} mt-8 sm:mx-0 sm:mt-12 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-5`}
       >
-        Coffee, spices, scents and sleep, brought home from around the world.
-      </h1>
-
-      <p className="mx-auto mt-5 max-w-xl text-base text-neutral-600 sm:text-lg">
-        Explore everyday essentials and little luxuries for your home.
-      </p>
-
-      <div className="mt-10 grid grid-cols-2 gap-4 sm:mt-12 sm:gap-5 md:grid-cols-5">
-        {categoryKeys.map((key, index) => {
+        {categoryKeys.map((key) => {
           const category = categories[key];
 
           return (
             <a
               key={key}
               href="#best-sellers"
-              className={`group overflow-hidden rounded-t-full pb-5 transition-transform duration-300 hover:-translate-y-2 ${
-                index === 4 ? "col-span-2 mx-auto w-1/2 md:col-span-1 md:w-full" : ""
-              }`}
+              className="group w-[62%] max-w-[260px] shrink-0 snap-center overflow-hidden rounded-t-full pb-4 sm:w-auto sm:max-w-none sm:pb-5 sm:transition-transform sm:duration-300 sm:hover:-translate-y-2"
               style={{ backgroundColor: category.light }}
             >
               <div className="aspect-[3/4] overflow-hidden rounded-t-full">
@@ -304,14 +325,11 @@ function Hero() {
                 />
               </div>
 
-              <div className="px-2 pt-4">
-                <h2
-                  className="font-semibold"
-                  style={{ color: category.dark }}
-                >
+              <div className="px-2 pt-3 text-center sm:pt-4">
+                <h2 className="font-semibold" style={{ color: category.dark }}>
                   {category.label}
                 </h2>
-                <p className="mt-1 text-xs text-neutral-600 sm:text-sm">
+                <p className="mt-0.5 text-xs text-neutral-600 sm:mt-1 sm:text-sm">
                   {category.tagline}
                 </p>
               </div>
@@ -324,49 +342,48 @@ function Hero() {
 }
 
 // ---------- Value Strip ----------
+// Mobile: one line you can swipe sideways. Larger screens: centered.
 function ValueStrip() {
   return (
-    <div className="bg-[#2B1810] py-4">
-      <ul className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-8 gap-y-3 px-5 text-center text-xs text-white/90 sm:px-6 sm:text-sm md:gap-x-10">
+    <div className="bg-[#2B1810] py-3.5 sm:py-4">
+      <ul
+        className={`mx-auto flex max-w-6xl gap-8 overflow-x-auto whitespace-nowrap px-5 text-xs text-white/90 sm:justify-center sm:px-6 sm:text-sm md:gap-10 ${hideScrollbar}`}
+      >
         {strip.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item} className="shrink-0">
+            {item}
+          </li>
         ))}
       </ul>
     </div>
   );
 }
 
-// ---------- Product Image ----------
-function ProductImage({ product }: { product: Product }) {
-  const { light } = categories[product.category];
-
-  return (
-    <div
-      className="aspect-[4/5] overflow-hidden rounded-2xl"
-      style={{ backgroundColor: light }}
-    >
-      <img
-        src={product.image}
-        alt={product.name}
-        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-        loading="lazy"
-      />
-    </div>
-  );
-}
-
 // ---------- Product Card ----------
 function ProductCard({ product }: { product: Product }) {
-  const { dark } = categories[product.category];
+  const { dark, light } = categories[product.category];
+
+  // The brand color is passed as a CSS variable so Tailwind can use it for hover/active.
+  const colorVar = { "--brand": dark } as CSSProperties;
 
   return (
-    <article className="flex min-w-0 flex-col">
+    <article className="flex min-w-0 flex-col" style={colorVar}>
       <div className="relative">
-        <ProductImage product={product} />
+        <div
+          className="aspect-[4/5] overflow-hidden rounded-2xl"
+          style={{ backgroundColor: light }}
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+            loading="lazy"
+          />
+        </div>
 
         {product.badge && (
           <span
-            className="absolute left-2 top-2 rounded-full px-2.5 py-1 text-[10px] font-semibold text-white sm:left-3 sm:top-3 sm:px-3 sm:text-xs"
+            className="absolute left-2 top-2 rounded-full px-2.5 py-1 text-[10px] font-semibold text-white sm:left-3 sm:top-3 sm:text-xs"
             style={{ backgroundColor: dark }}
           >
             {product.badge}
@@ -374,46 +391,28 @@ function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <h3 className="mt-3 text-sm font-semibold text-[#2B1810] sm:text-base">
+      <h3 className="mt-3 line-clamp-2 text-sm font-semibold leading-snug text-[#2B1810] sm:text-base">
         {product.name}
       </h3>
 
-      <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
+      <p className="mt-1 line-clamp-1 text-xs text-neutral-500 sm:text-sm">
         {product.detail}
       </p>
 
-      <p className="mt-2">
-        <span className="font-semibold">
-          {formatPrice(product.price)}
-        </span>
+      <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
+        <span className="font-semibold">{formatPrice(product.price)}</span>
 
         {product.oldPrice && (
-          <span className="ml-2 text-xs text-neutral-400 line-through sm:text-sm">
+          <span className="text-xs text-neutral-400 line-through sm:text-sm">
             {formatPrice(product.oldPrice)}
           </span>
         )}
       </p>
 
+      {/* h-11 = 44px, the minimum comfortable tap size on phones */}
       <button
         type="button"
-        className="mt-3 rounded-full border-2 px-2 py-2 text-xs font-semibold transition-colors hover:text-white sm:text-sm"
-        style={{ borderColor: dark, color: dark }}
-        onMouseEnter={(event) => {
-          event.currentTarget.style.backgroundColor = dark;
-          event.currentTarget.style.color = "#FFFFFF";
-        }}
-        onMouseLeave={(event) => {
-          event.currentTarget.style.backgroundColor = "transparent";
-          event.currentTarget.style.color = dark;
-        }}
-        onFocus={(event) => {
-          event.currentTarget.style.backgroundColor = dark;
-          event.currentTarget.style.color = "#FFFFFF";
-        }}
-        onBlur={(event) => {
-          event.currentTarget.style.backgroundColor = "transparent";
-          event.currentTarget.style.color = dark;
-        }}
+        className="mt-3 h-11 w-full rounded-full border-2 border-[var(--brand)] text-sm font-semibold text-[var(--brand)] transition-colors hover:bg-[var(--brand)] hover:text-white focus-visible:bg-[var(--brand)] focus-visible:text-white active:bg-[var(--brand)] active:text-white"
       >
         Add to cart
       </button>
@@ -422,9 +421,12 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 // ---------- Best Sellers ----------
-function BestSellers() {
-  const [activeTab, setActiveTab] = useState<CategoryKey | "all">("all");
+type BestSellersProps = {
+  activeTab: TabKey;
+  onTabChange: (tab: TabKey) => void;
+};
 
+function BestSellers({ activeTab, onTabChange }: BestSellersProps) {
   const visibleProducts =
     activeTab === "all"
       ? products
@@ -433,61 +435,64 @@ function BestSellers() {
   return (
     <section
       id="best-sellers"
-      className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16"
+      className="mx-auto max-w-6xl scroll-mt-4 px-5 py-10 sm:px-6 sm:py-16"
     >
-      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-end sm:gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8A6045]">
             Customer favourites
           </p>
           <h2
-            className={`${display.className} mt-2 text-3xl text-[#2B1810] sm:text-4xl`}
+            className={`${display.className} mt-1 text-[26px] text-[#2B1810] sm:mt-2 sm:text-4xl`}
           >
             Best sellers
           </h2>
         </div>
 
-        <p className="text-sm text-neutral-500">
+        <p className="hidden text-sm text-neutral-500 sm:block">
           Find something you will love.
         </p>
       </div>
 
-      <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
-        <button
-          type="button"
-          onClick={() => setActiveTab("all")}
-          className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
-            activeTab === "all"
-              ? "bg-[#2B1810] text-white"
-              : "bg-neutral-100 text-neutral-700"
-          }`}
-        >
-          All
-        </button>
+      {/* Tabs stick to the top while scrolling the products on mobile */}
+      <div className="sticky top-0 z-10 -mx-5 mt-4 bg-white/95 px-5 py-2 backdrop-blur sm:static sm:mx-0 sm:px-0 sm:py-0">
+        <div className={`flex gap-2 overflow-x-auto ${hideScrollbar}`}>
+          <button
+            type="button"
+            onClick={() => onTabChange("all")}
+            className={`h-10 shrink-0 rounded-full px-4 text-sm font-medium ${
+              activeTab === "all"
+                ? "bg-[#2B1810] text-white"
+                : "bg-neutral-100 text-neutral-700"
+            }`}
+          >
+            All
+          </button>
 
-        {categoryKeys.map((key) => {
-          const isActive = activeTab === key;
+          {categoryKeys.map((key) => {
+            const isActive = activeTab === key;
 
-          return (
-            <button
-              type="button"
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className="shrink-0 rounded-full px-4 py-2 text-sm font-medium"
-              style={{
-                backgroundColor: isActive
-                  ? categories[key].dark
-                  : categories[key].light,
-                color: isActive ? "#FFFFFF" : categories[key].dark,
-              }}
-            >
-              {categories[key].label}
-            </button>
-          );
-        })}
+            return (
+              <button
+                type="button"
+                key={key}
+                onClick={() => onTabChange(key)}
+                className="h-10 shrink-0 rounded-full px-4 text-sm font-medium"
+                style={{
+                  backgroundColor: isActive
+                    ? categories[key].dark
+                    : categories[key].light,
+                  color: isActive ? "#FFFFFF" : categories[key].dark,
+                }}
+              >
+                {categories[key].label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="mt-7 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-5 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-5 grid grid-cols-2 gap-x-3 gap-y-7 sm:mt-7 sm:gap-x-5 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
         {visibleProducts.map((product) => (
           <ProductCard key={product.name} product={product} />
         ))}
@@ -497,17 +502,20 @@ function BestSellers() {
 }
 
 // ---------- Shop by Need ----------
-function ShopByNeed() {
+function ShopByNeed({ onPick }: { onPick: (tab: TabKey) => void }) {
   return (
-    <section className="bg-neutral-50 py-14 sm:py-16">
+    <section className="bg-neutral-50 py-10 sm:py-16">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <h2
-          className={`${display.className} text-3xl text-[#2B1810] sm:text-4xl`}
+          className={`${display.className} text-[26px] text-[#2B1810] sm:text-4xl`}
         >
           What do you need today?
         </h2>
 
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+        {/* Mobile: swipeable cards. Tablet and up: grid. */}
+        <div
+          className={`${swipeRow} mt-6 sm:mx-0 sm:mt-8 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 md:grid-cols-5`}
+        >
           {needs.map((need) => {
             const { dark, light } = categories[need.category];
 
@@ -515,22 +523,19 @@ function ShopByNeed() {
               <a
                 key={need.title}
                 href="#best-sellers"
-                onClick={() => {
-                  // The matching category can also be selected
-                  // directly in BestSellers if shared state is added.
-                }}
-                className="flex min-h-36 flex-col justify-between rounded-2xl p-4 transition-transform hover:-translate-y-1 sm:min-h-40 sm:p-5"
+                onClick={() => onPick(need.category)}
+                className="flex min-h-36 w-[68%] max-w-[260px] shrink-0 snap-start flex-col justify-between rounded-2xl p-4 active:scale-[0.98] sm:min-h-40 sm:w-auto sm:max-w-none sm:p-5 sm:transition-transform sm:hover:-translate-y-1"
                 style={{ backgroundColor: light }}
               >
                 <span
-                  className={`${display.className} text-lg sm:text-xl`}
+                  className={`${display.className} text-lg leading-snug sm:text-xl`}
                   style={{ color: dark }}
                 >
                   {need.title}
                 </span>
 
                 <span
-                  className="mt-5 text-sm font-semibold"
+                  className="mt-4 text-sm font-semibold"
                   style={{ color: dark }}
                 >
                   {need.link} →
@@ -547,8 +552,8 @@ function ShopByNeed() {
 // ---------- Our Story ----------
 function Story() {
   return (
-    <section className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 sm:px-6 sm:py-20 md:grid-cols-2 md:gap-12">
-      <div className="h-64 overflow-hidden rounded-3xl sm:h-80">
+    <section className="mx-auto grid max-w-6xl items-center gap-6 px-5 py-10 sm:px-6 sm:py-20 md:grid-cols-2 md:gap-12">
+      <div className="aspect-[4/3] overflow-hidden rounded-3xl md:aspect-auto md:h-80">
         <img
           src="https://img.magnific.com/free-photo/people-coffee-shop_53876-47028.jpg?semt=ais_hybrid&w=740&q=80"
           alt="A thoughtfully arranged retail store"
@@ -563,12 +568,12 @@ function Story() {
         </p>
 
         <h2
-          className={`${display.className} mt-3 text-2xl leading-snug text-[#2B1810] sm:text-3xl`}
+          className={`${display.className} mt-2 text-2xl leading-snug text-[#2B1810] sm:mt-3 sm:text-3xl`}
         >
           Good things from around the world, brought closer to home.
         </h2>
 
-        <p className="mt-4 leading-7 text-neutral-600">
+        <p className="mt-3 text-[15px] leading-7 text-neutral-600 sm:mt-4 sm:text-base">
           Everything we sell is selected with everyday living in mind,
           from your morning coffee and favourite spices to fragrances
           and comfortable bedroom essentials.
@@ -581,17 +586,19 @@ function Story() {
 // ---------- Promises ----------
 function Promises() {
   return (
-    <section className="bg-[#2B1810] py-14 text-white sm:py-16">
+    <section className="bg-[#2B1810] py-10 text-white sm:py-16">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <h2 className={`${display.className} text-3xl sm:text-4xl`}>
+        <h2 className={`${display.className} text-[26px] sm:text-4xl`}>
           Why shop with us
         </h2>
 
-        <div className="mt-8 grid gap-7 sm:grid-cols-2 md:grid-cols-4 md:gap-8">
+        <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:mt-8 sm:gap-8 md:grid-cols-4">
           {promises.map((promise) => (
             <div key={promise.title}>
-              <h3 className="font-semibold">{promise.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-white/70">
+              <h3 className="text-sm font-semibold sm:text-base">
+                {promise.title}
+              </h3>
+              <p className="mt-1.5 text-[13px] leading-5 text-white/70 sm:mt-2 sm:text-sm sm:leading-6">
                 {promise.text}
               </p>
             </div>
@@ -603,20 +610,23 @@ function Promises() {
 }
 
 // ---------- Customer Reviews ----------
+// Mobile: swipeable cards. Tablet and up: grid.
 function Reviews() {
   return (
-    <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16">
+    <section className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-16">
       <h2
-        className={`${display.className} text-3xl text-[#2B1810] sm:text-4xl`}
+        className={`${display.className} text-[26px] text-[#2B1810] sm:text-4xl`}
       >
         Loved by our customers
       </h2>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
+      <div
+        className={`${swipeRow} mt-6 sm:mx-0 sm:mt-8 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-3`}
+      >
         {reviews.map((review) => (
           <blockquote
             key={review.name}
-            className="rounded-2xl bg-neutral-50 p-5 sm:p-6"
+            className="w-[82%] max-w-sm shrink-0 snap-start rounded-2xl bg-neutral-50 p-5 sm:w-auto sm:max-w-none sm:p-6"
           >
             <p className="leading-7 text-neutral-700">
               &ldquo;{review.text}&rdquo;
@@ -635,14 +645,20 @@ function Reviews() {
 
 // ---------- Homepage ----------
 export default function HomePage() {
+  // Shared by "Shop by need" and "Best sellers", so tapping a need
+  // opens the matching category in the product list.
+  const [activeTab, setActiveTab] = useState<TabKey>("all");
+
   return (
-    <main className={`${body.className} bg-white text-neutral-900`}>
+    <main
+      className={`${body.className} overflow-x-hidden bg-white text-neutral-900`}
+    >
       <AnnouncementBar />
       {/* Add your Navbar component here */}
       <Hero />
       <ValueStrip />
-      <BestSellers />
-      <ShopByNeed />
+      <BestSellers activeTab={activeTab} onTabChange={setActiveTab} />
+      <ShopByNeed onPick={setActiveTab} />
       <Story />
       <Promises />
       <Reviews />
