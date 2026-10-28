@@ -39,10 +39,10 @@ import { useCart } from "@/components/CartContext";
 // ---------------------------------------------------------------------------
 // Shared palette for the four shop pages (coffee, spices, perfumes, beds).
 const INK = "#1F1A17";
-const CREAM = "#FFF9F3";
-const PASTEL = "#F3E7D5";
-const BURGUNDY = "#754747";
-const COPPER_L = "#9C5A2B";
+const CREAM = "#F5EDE0";
+const PASTEL = "#E9DCC6";
+const BURGUNDY = "#7A5A3C";
+const COPPER_L = "#8A6642";
 const MUTED = "rgba(31,26,23,0.65)";
 const LINE = "rgba(31,26,23,0.15)";
 const BORDER = "rgba(31,26,23,0.3)";
@@ -197,7 +197,7 @@ function CircleOption({
       />
       <span
         aria-hidden
-        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#754747]/70 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#FFF9F3]"
+        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#7A5A3C]/70 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#F5EDE0]"
         style={{ borderColor: checked ? BURGUNDY : "rgba(31,26,23,0.45)" }}
       >
         <span
@@ -248,7 +248,7 @@ function SortDropdown({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Sort products. Current: ${current}`}
-        className="flex w-full items-center justify-between border bg-white px-4 py-2.5 text-left text-sm normal-case tracking-[0.03em] outline-none focus-visible:border-[#754747]"
+        className="flex w-full items-center justify-between border bg-white px-4 py-2.5 text-left text-sm normal-case tracking-[0.03em] outline-none focus-visible:border-[#7A5A3C]"
         style={{ borderColor: open ? BURGUNDY : BORDER, color: INK }}
       >
         <span>{current}</span>
@@ -272,7 +272,7 @@ function SortDropdown({
                     setOpen(false);
                   }}
                   className={`block w-full px-4 py-2.5 text-left text-sm normal-case tracking-[0.03em] transition-colors ${
-                    active ? "bg-[#754747] text-[#FFF9F3]" : "text-[#1F1A17] hover:bg-[#F3E7D5]"
+                    active ? "bg-[#7A5A3C] text-[#F5EDE0]" : "text-[#1F1A17] hover:bg-[#E9DCC6]"
                   }`}
                 >
                   {o.label}
@@ -415,7 +415,7 @@ function ProductCard({
           onClick={() => onToggleWish(p.id)}
           aria-pressed={wished}
           aria-label={wished ? `Remove ${p.name} from wishlist` : `Add ${p.name} to wishlist`}
-          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#754747]"
+          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#7A5A3C]"
           style={{ color: wished ? BURGUNDY : INK }}
         >
           <Heart
@@ -451,23 +451,27 @@ function ProductCard({
       </MaybeLink>
 
       <button
-        type="button"
-        onClick={handleAdd}
-        disabled={p.soldOut}
-        aria-live="polite"
-        className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors hover:bg-[#754747] hover:text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
-        style={{ borderColor: BURGUNDY, color: BURGUNDY }}
-      >
-        {p.soldOut ? (
-          "Sold out"
-        ) : added ? (
-          "Added ✓"
-        ) : (
-          <>
-            Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
-          </>
-        )}
-      </button>
+  type="button"
+  onClick={handleAdd}
+  disabled={p.soldOut}
+  aria-live="polite"
+  // 1. Set the default text color here via className using text-[#754747]
+  // 2. Added hover:!text-[#FFF9F3] to cleanly override the text color on hover
+  className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] text-[#754747] transition-colors hover:bg-[#754747] hover:!text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
+  // FIXED: Removed "color: BURGUNDY" from this style block so Tailwind can control it on hover
+  style={{ borderColor: BURGUNDY }}
+>
+  {p.soldOut ? (
+    "Sold out"
+  ) : added ? (
+    "Added ✓"
+  ) : (
+    <>
+      Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
+    </>
+  )}
+</button>
+
     </article>
   );
 }
@@ -601,10 +605,10 @@ function ShopPage({
   const shown = filtered.slice(0, visible);
 
   const priceInput =
-    "w-full min-w-0 border bg-white px-3 py-2 text-sm text-[#1F1A17] outline-none placeholder:text-[#1F1A17]/40 focus:border-[#754747]";
+    "w-full min-w-0 border bg-white px-3 py-2 text-sm text-[#1F1A17] outline-none placeholder:text-[#1F1A17]/40 focus:border-[#7A5A3C]";
   const groupButton = "flex w-full items-center justify-between text-left text-sm uppercase tracking-[0.25em]";
   const outlineButton =
-    "border text-xs uppercase tracking-[0.3em] transition-colors hover:bg-[#754747] hover:text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747]";
+    "border text-xs uppercase tracking-[0.3em] transition-colors hover:bg-[#7A5A3C] hover:text-[#F5EDE0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A5A3C]";
 
   const filtersPanel = (
     <div>
@@ -759,7 +763,7 @@ function ShopPage({
 
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
             <label
-              className="flex w-full items-center gap-2 border bg-white px-3 focus-within:border-[#754747] sm:w-56"
+              className="flex w-full items-center gap-2 border bg-white px-3 focus-within:border-[#7A5A3C] sm:w-56"
               style={{ borderColor: BORDER }}
             >
               <Search aria-hidden className="h-4 w-4 shrink-0" strokeWidth={1.5} style={{ color: MUTED }} />
@@ -912,15 +916,20 @@ function ShopPage({
 // ---------------------------------------------------------------------------
 // THIS PAGE: PRODUCTS AND TEXT
 // ---------------------------------------------------------------------------
+// Product images are files inside public/images/coffee/.
+// To change a photo, put your file in that folder and change the file name here.
+// If a file is missing, the card shows a "Photo coming soon" box instead.
+const img = (fileName: string) => `/images/coffee/${fileName}`;
+
 const products: ShopProduct[] = [
-  { id: 1, slug: "premium-arabica-coffee-powder", name: "Premium Arabica Coffee Powder", category: "Coffee Powder", description: "Smooth aroma with a rich, balanced flavour.", price: 349, mrp: 425, image: "/images/coffee/arabica.avif", badge: "Bestseller" },
-  { id: 2, slug: "strong-robusta-coffee-powder", name: "Strong Robusta Coffee Powder", category: "Coffee Powder", description: "Bold taste for a strong morning brew.", price: 299, mrp: 375, image: "/images/coffee/arabica.avif" },
-  { id: 3, slug: "traditional-filter-coffee", name: "Traditional Filter Coffee", category: "Coffee Powder", description: "A classic filter coffee blend for everyday enjoyment.", price: 249, image: "/images/coffee/arabica.avif", badge: "Popular" },
-  { id: 4, slug: "dark-roast-coffee-powder", name: "Dark Roast Coffee Powder", category: "Coffee Powder", description: "Deep roasted flavour with an intense aroma.", price: 399, image: "/images/coffee/arabica.avif" },
-  { id: 5, slug: "organic-coffee-powder", name: "Organic Coffee Powder", category: "Coffee Powder", description: "A delightful coffee experience for your daily ritual.", price: 449, image: "/images/coffee/arabica.avif", badge: "Special" },
-  { id: 6, slug: "coffee-body-scrub", name: "Coffee Body Scrub", category: "Coffee Skincare", description: "A coffee-inspired exfoliating body care essential.", price: 299, mrp: 349, image: "/images/coffee/coffee-scrub.avif", badge: "Bestseller" },
-  { id: 7, slug: "coffee-handmade-soap", name: "Coffee Handmade Soap", category: "Coffee Skincare", description: "A coffee-inspired cleansing bar for your daily routine.", price: 149, image: "/images/coffee/coffee-soap.avif" },
-  { id: 8, slug: "coffee-face-wash", name: "Coffee Face Wash", category: "Coffee Skincare", description: "A refreshing face cleanser for everyday use.", price: 249, image: "/images/coffee/coffee-facewash.avif", badge: "New" },
+  { id: 1, slug: "premium-arabica-coffee-powder", name: "Premium Arabica Coffee Powder", category: "Coffee Powder", description: "Smooth aroma with a rich, balanced flavour.", price: 349, mrp: 425, image: img("arabica.jpeg"), badge: "Bestseller" },
+  { id: 2, slug: "strong-robusta-coffee-powder", name: "Strong Robusta Coffee Powder", category: "Coffee Powder", description: "Bold taste for a strong morning brew.", price: 299, mrp: 375, image: img("arabica.jpeg") },
+  { id: 3, slug: "traditional-filter-coffee", name: "Traditional Filter Coffee", category: "Coffee Powder", description: "A classic filter coffee blend for everyday enjoyment.", price: 249, image: img("arabica.jpeg"), badge: "Popular" },
+  { id: 4, slug: "dark-roast-coffee-powder", name: "Dark Roast Coffee Powder", category: "Coffee Powder", description: "Deep roasted flavour with an intense aroma.", price: 399, image: img("arabica.jpeg") },
+  { id: 5, slug: "organic-coffee-powder", name: "Organic Coffee Powder", category: "Coffee Powder", description: "A delightful coffee experience for your daily ritual.", price: 449, image: img("arabica.jpeg"), badge: "Special" },
+  { id: 6, slug: "coffee-body-scrub", name: "Coffee Body Scrub", category: "Coffee Skincare", description: "A coffee-inspired exfoliating body care essential.", price: 299, mrp: 349, image: img("coffee-scrub.avif"), badge: "Bestseller" },
+  { id: 7, slug: "coffee-handmade-soap", name: "Coffee Handmade Soap", category: "Coffee Skincare", description: "A coffee-inspired cleansing bar for your daily routine.", price: 149, image: img("coffee-soap.avif") },
+  { id: 8, slug: "coffee-face-wash", name: "Coffee Face Wash", category: "Coffee Skincare", description: "A refreshing face cleanser for everyday use.", price: 249, image: img("coffee-facewash.avif"), badge: "New" },
 ];
 
 export default function CoffeePage() {

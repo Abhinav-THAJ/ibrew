@@ -451,23 +451,27 @@ function ProductCard({
       </MaybeLink>
 
       <button
-        type="button"
-        onClick={handleAdd}
-        disabled={p.soldOut}
-        aria-live="polite"
-        className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors hover:bg-[#754747] hover:text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
-        style={{ borderColor: BURGUNDY, color: BURGUNDY }}
-      >
-        {p.soldOut ? (
-          "Sold out"
-        ) : added ? (
-          "Added ✓"
-        ) : (
-          <>
-            Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
-          </>
-        )}
-      </button>
+  type="button"
+  onClick={handleAdd}
+  disabled={p.soldOut}
+  aria-live="polite"
+  // 1. Set the default text color here via className using text-[#754747]
+  // 2. Added hover:!text-[#FFF9F3] to cleanly override the text color on hover
+  className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] text-[#754747] transition-colors hover:bg-[#754747] hover:!text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
+  // FIXED: Removed "color: BURGUNDY" from this style block so Tailwind can control it on hover
+  style={{ borderColor: BURGUNDY }}
+>
+  {p.soldOut ? (
+    "Sold out"
+  ) : added ? (
+    "Added ✓"
+  ) : (
+    <>
+      Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
+    </>
+  )}
+</button>
+
     </article>
   );
 }
@@ -912,15 +916,17 @@ function ShopPage({
 // ---------------------------------------------------------------------------
 // THIS PAGE: PRODUCTS AND TEXT
 // ---------------------------------------------------------------------------
+
+const img = (fileName: string) => `/images/importedbed/${fileName}`;
 const products: ShopProduct[] = [
   { id: 101, slug: "modern-single-bed", name: "Harmony Mattress", category: "Single Beds", description: "A clean, space-saving design for compact bedrooms.", price: 8999, mrp: 11999, image: "/images/importedbed/single-bed.jpeg", badge: "Popular" },
   { id: 102, slug: "premium-double-bed", name: "Glory Mattress", category: "Double Beds", description: "A comfortable design for everyday living.", price: 14999, mrp: 18999, image: "/images/importedbed/double-bed.jpeg" },
-  { id: 103, slug: "luxury-queen-bed", name: "Luxury Queen Bed", category: "Queen Beds", description: "A spacious bed design for a refined bedroom.", price: 21999, mrp: 27999, image: "/images/importedbed/queen-bed.jpg", badge: "Bestseller" },
-  { id: 104, slug: "king-size-bed", name: "King Size Bed", category: "King Beds", description: "A generously sized bed for larger bedrooms.", price: 28999, mrp: 35999, image: "/images/importedbed/king-bed.jpg" },
-  { id: 105, slug: "upholstered-queen-bed", name: "Upholstered Queen Bed", category: "Queen Beds", description: "An upholstered style with a soft, elegant appearance.", price: 24999, mrp: 31999, image: "/images/importedbed/upholstered-bed.jpg" },
-  { id: 106, slug: "classic-wooden-bed", name: "Classic Wooden Bed", category: "Double Beds", description: "A timeless wooden look for a warm bedroom interior.", price: 17999, mrp: 22999, image: "/images/importedbed/wooden-bed.jpg" },
-  { id: 107, slug: "storage-king-bed", name: "Storage King Bed", category: "King Beds", description: "A spacious bed design with convenient storage options.", price: 32999, mrp: 39999, image: "/images/importedbed/storage-bed.jpg", badge: "Featured" },
-  { id: 108, slug: "minimal-single-bed", name: "Minimal Single Bed", category: "Single Beds", description: "A versatile design for guest rooms and bedrooms.", price: 9999, mrp: 12999, image: "/images/importedbed/minimal-bed.jpg" },
+  { id: 103, slug: "luxury-queen-bed", name: "Luxury Queen Bed", category: "Queen Beds", description: "A spacious bed design for a refined bedroom.", price: 21999, mrp: 27999, image: "/images/importedbed/double-bed.jpeg", badge: "Bestseller" },
+  { id: 104, slug: "king-size-bed", name: "King Size Bed", category: "King Beds", description: "A generously sized bed for larger bedrooms.", price: 28999, mrp: 35999, image: "/images/importedbed/double-bed.jpeg" },
+  { id: 105, slug: "upholstered-queen-bed", name: "Upholstered Queen Bed", category: "Queen Beds", description: "An upholstered style with a soft, elegant appearance.", price: 24999, mrp: 31999, image: "/images/importedbed/double-bed.jpeg" },
+  { id: 106, slug: "classic-wooden-bed", name: "Classic Wooden Bed", category: "Double Beds", description: "A timeless wooden look for a warm bedroom interior.", price: 17999, mrp: 22999, image: "/images/importedbed/double-bed.jpeg" },
+  { id: 107, slug: "storage-king-bed", name: "Storage King Bed", category: "King Beds", description: "A spacious bed design with convenient storage options.", price: 32999, mrp: 39999, image: "/images/importedbed/double-bed.jpeg", badge: "Featured" },
+  { id: 108, slug: "minimal-single-bed", name: "Minimal Single Bed", category: "Single Beds", description: "A versatile design for guest rooms and bedrooms.", price: 9999, mrp: 12999, image: "/images/importedbed/double-bed.jpeg" },
 ];
 
 export default function ImportedBedPage() {

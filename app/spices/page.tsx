@@ -451,23 +451,27 @@ function ProductCard({
       </MaybeLink>
 
       <button
-        type="button"
-        onClick={handleAdd}
-        disabled={p.soldOut}
-        aria-live="polite"
-        className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors hover:bg-[#754747] hover:text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
-        style={{ borderColor: BURGUNDY, color: BURGUNDY }}
-      >
-        {p.soldOut ? (
-          "Sold out"
-        ) : added ? (
-          "Added ✓"
-        ) : (
-          <>
-            Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
-          </>
-        )}
-      </button>
+  type="button"
+  onClick={handleAdd}
+  disabled={p.soldOut}
+  aria-live="polite"
+  // 1. Set the default text color here via className using text-[#754747]
+  // 2. Added hover:!text-[#FFF9F3] to cleanly override the text color on hover
+  className="mt-3 flex w-full items-center justify-center gap-2 border px-2 py-2.5 text-[10px] uppercase tracking-[0.15em] text-[#754747] transition-colors hover:bg-[#754747] hover:!text-[#FFF9F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#754747] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#754747] sm:text-xs sm:tracking-[0.2em]"
+  // FIXED: Removed "color: BURGUNDY" from this style block so Tailwind can control it on hover
+  style={{ borderColor: BURGUNDY }}
+>
+  {p.soldOut ? (
+    "Sold out"
+  ) : added ? (
+    "Added ✓"
+  ) : (
+    <>
+      Add to cart <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.5} />
+    </>
+  )}
+</button>
+
     </article>
   );
 }
