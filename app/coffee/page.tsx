@@ -40,7 +40,7 @@ const products: Product[] = [
     description: "Bold taste for a strong morning brew.",
     price: 299,
     oldPrice: 375,
-    image: "/images/coffee/arabica.avif",
+    image: "/images/coffee/arabica.jpeg",
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ const products: Product[] = [
     category: "Coffee Powder",
     description: "A classic filter coffee blend for everyday enjoyment.",
     price: 249,
-    image: "/images/coffee/arabica.avif",
+    image: "/images/coffee/arabica.jpeg",
     badge: "Popular",
   },
   {

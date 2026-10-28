@@ -288,7 +288,7 @@ function Hero() {
         <h1
           className={`${display.className} mx-auto max-w-3xl text-[28px] leading-[1.15] text-[#2B1810] sm:text-5xl md:text-6xl`}
         >
-          Coffee, spices, scents and sleep, brought home from around the world.
+          Fragrances, Imported Mattresses, and Coffee: Premium Luxuries Brought Home From Around the World.
         </h1>
 
         <p className="mx-auto mt-4 max-w-xl text-[15px] text-neutral-600 sm:text-lg">
