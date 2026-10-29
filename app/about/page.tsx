@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Coffee, Leaf, Flower2, BedDouble } from "lucide-react";
+import { ArrowRight, Sparkles, Coffee, Leaf, Flower2, Layers } from "lucide-react";
 
 export default function AboutPage() {
   const values = [
@@ -22,7 +22,7 @@ export default function AboutPage() {
     {
       title: "Honest Materiality",
       desc: "Whether it is long-staple Egyptian Giza cotton or certified Pinocore organic latex, we never compromise on biological purity, skin safety, or environmental stewardship.",
-      icon: BedDouble,
+      icon: Layers,
     },
   ];
 
@@ -170,7 +170,7 @@ export default function AboutPage() {
           <div className="relative h-64 rounded-2xl overflow-hidden shadow-sm border border-white/10">
             <Image
               src="/images/importedbed/double-bed.jpeg"
-              alt="Luxury bedroom setup"
+              alt="Luxury ergonomic mattress"
               fill
               className="object-cover"
             />

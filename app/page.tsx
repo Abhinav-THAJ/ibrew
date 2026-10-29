@@ -12,7 +12,7 @@ import {
   Coffee,
   Leaf,
   Flower2,
-  BedDouble,
+  Layers,
   ChevronRight,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
@@ -110,7 +110,7 @@ export default function HomePage() {
       desc: "7-zone ergonomic mattresses engineered for zero-pressure spinal alignment, complemented by 800TC long-staple Egyptian Giza sheets.",
       image: "/images/importedbed/double-bed.jpeg",
       href: "/shop?category=importedbed",
-      icon: BedDouble,
+      icon: Layers,
       badge: "European Craft",
     },
   ]);
@@ -126,7 +126,7 @@ export default function HomePage() {
               coffee: Coffee,
               spices: Leaf,
               perfumeoil: Flower2,
-              importedbed: BedDouble,
+              importedbed: Layers,
             };
             const mapped = data.map((cat: any) => ({
               title: cat.name,

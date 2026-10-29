@@ -22,7 +22,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "ibrew | Artisanal Coffee, Pure Spices & Luxury Living",
   description:
-    "Curators of micro-lot estate coffees, wild-harvested Malabar spices, traditional oud attars, and luxury European bedding.",
+    "Curators of micro-lot estate coffees, wild-harvested Malabar spices, traditional oud attars, and luxury European mattresses.",
   icons: {
     icon: "/images/logo-ibrew.png",
   },

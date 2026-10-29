@@ -14,7 +14,7 @@ import {
   Coffee,
   Leaf,
   Flower2,
-  BedDouble,
+  Layers,
   ArrowUpDown,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
@@ -96,7 +96,7 @@ function ShopContent() {
     { id: "coffee", label: "Estate Coffee", icon: Coffee },
     { id: "spices", label: "Estate Spices", icon: Leaf },
     { id: "perfumeoil", label: "Rare Fragrance Oils", icon: Flower2 },
-    { id: "importedbed", label: "Mattresses", icon: BedDouble },
+    { id: "importedbed", label: "Mattresses", icon: Layers },
   ]);
 
   useEffect(() => {
@@ -110,7 +110,7 @@ function ShopContent() {
               coffee: Coffee,
               spices: Leaf,
               perfumeoil: Flower2,
-              importedbed: BedDouble,
+              importedbed: Layers,
             };
             const mapped = [
               { id: "all", label: "All Offerings", icon: Sparkles },

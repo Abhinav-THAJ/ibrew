@@ -13,7 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import {
-  BedDouble,
+  Layers,
   ChevronDown,
   Coffee,
   Droplets,
@@ -481,7 +481,7 @@ const ICONS: Record<FeatureIconName, LucideIcon> = {
   wheat: Wheat,
   flower: Flower2,
   gem: Gem,
-  bed: BedDouble,
+  bed: Layers,
   sofa: Sofa,
 };
 

@@ -251,7 +251,7 @@ export default function ContactPage() {
                       <option className="bg-[#14110E] text-white">Corporate &amp; Festive Luxury Gifting</option>
                       <option className="bg-[#14110E] text-white">Bulk Export Spices (Cardamom/Pepper)</option>
                       <option className="bg-[#14110E] text-white">Bespoke Oud / Fragrance Formulation</option>
-                      <option className="bg-[#14110E] text-white">Hotel Bedding &amp; Latex Mattresses</option>
+                      <option className="bg-[#14110E] text-white">Hospitality &amp; Ergonomic Mattresses</option>
                     </select>
                   </div>
                 </div>

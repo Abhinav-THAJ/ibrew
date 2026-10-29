@@ -24,7 +24,7 @@ export default function ProductsPage() {
             Offerings Catalog
           </h1>
           <p className="mt-1 text-xs text-[#A89A8C]">
-            Manage artisanal roasts, spices, oils, and bedroom suites.
+            Manage artisanal roasts, spices, oils, and mattresses.
           </p>
         </div>
         <Link
