@@ -67,7 +67,7 @@ export default function Footer() {
                 alt="ibrew Luxury Roasters"
                 width={220}
                 height={70}
-                className="h-12 sm:h-14 w-auto object-contain brightness-0 invert transition-transform duration-300 hover:scale-105"
+                className="h-12 sm:h-14 w-auto object-contain filter drop-shadow-[0_2px_10px_rgba(214,178,124,0.35)] transition-transform duration-300 hover:scale-105"
               />
             </Link>
             <p className="text-xs leading-relaxed text-[#C4B7A7] max-w-sm">

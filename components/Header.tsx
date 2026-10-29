@@ -93,7 +93,7 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Brand Logo - Prominent & Artisanal */}
+            {/* Brand Logo - Radiant Artisanal Gold */}
             <div className="flex items-center">
               <Link href="/" className="group flex items-center py-1">
                 <Image
@@ -102,7 +102,7 @@ export default function Header() {
                   width={240}
                   height={78}
                   priority
-                  className="h-12 sm:h-14 lg:h-16 w-auto object-contain brightness-0 invert transition-all duration-300 group-hover:scale-105"
+                  className="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_12px_rgba(214,178,124,0.35)]"
                 />
               </Link>
             </div>
@@ -188,7 +188,7 @@ export default function Header() {
                   alt="ibrew Luxury Roasters"
                   width={180}
                   height={58}
-                  className="h-10 sm:h-11 w-auto object-contain brightness-0 invert"
+                  className="h-10 sm:h-11 w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(214,178,124,0.35)]"
                 />
                 <button
                   type="button"
