@@ -5,7 +5,7 @@ export const CATEGORIES: Category[] = ["coffee", "spices", "importedbed", "perfu
 export const CATEGORY_LABELS: Record<string, string> = {
   coffee: "Coffee",
   spices: "Spices",
-  importedbed: "Imported Beds",
+  importedbed: "Mattresses",
   perfumeoil: "Perfume Oils",
 };
 

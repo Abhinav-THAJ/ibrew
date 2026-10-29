@@ -241,7 +241,7 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     origin: "Grasse, France",
   },
 
-  // IMPORTED BEDS & MATTRESSES
+  // MATTRESSES
   {
     id: "bed-001",
     name: "The Sovereign 7-Zone Organic Latex Mattress",
@@ -262,11 +262,11 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
   },
   {
     id: "bed-002",
-    name: "Nordic Heritage Solid Oak Bed Frame",
+    name: "The Imperial Dual-Comfort Orthopedic Mattress",
     tagline: "Minimalist Scandinavian design crafted from kiln-dried European white oak.",
     description: "Timeless artisanal joinery without visible screws. Low-profile platform bed with integrated headboard cushion upholstered in unbleached Belgian linen.",
     category: "importedbed",
-    subCategory: "Bed Frames",
+    subCategory: "Orthopedic Mattresses",
     price: 49999,
     mrp: 58000,
     rating: 4.9,
@@ -280,11 +280,11 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
   },
   {
     id: "bed-003",
-    name: "Egyptian Giza Cotton 800TC Sheet Set",
+    name: "Egyptian Giza Cotton 800TC Mattress Cover Set",
     tagline: "Silky sateen weave crafted from long-staple certified authentic Giza cotton fibres.",
     description: "Unmatched buttery softness that softens with every wash. Includes 1 fitted sheet, 1 flat sheet, and 2 tailored pillowcases with French hems.",
     category: "importedbed",
-    subCategory: "Luxury Bedding",
+    subCategory: "Mattress Toppers & Covers",
     price: 4999,
     mrp: 6500,
     rating: 4.9,

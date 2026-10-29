@@ -71,7 +71,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-xs leading-relaxed text-[#C4B7A7] max-w-sm">
-              Dedicated to the honest pursuit of slow living. We curate micro-lot estate coffees, export-grade Malabar spices, artisanal perfumery oils, and European sleep systems for discerning homes.
+              Dedicated to the honest pursuit of slow living. We curate micro-lot estate coffees, export-grade Malabar spices, artisanal perfumery oils, and European mattresses for discerning homes.
             </p>
 
             {/* Newsletter */}
@@ -164,7 +164,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/shop?category=importedbed" className="hover:text-white transition-colors">
-                  Luxury Bedding Systems
+                  Luxury Mattresses
                 </Link>
               </li>
               <li>

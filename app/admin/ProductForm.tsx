@@ -116,9 +116,9 @@ export default function ProductForm({ product }: { product?: ProductType }) {
       subCategories: ["Pure Attar Distillate", "Aged Oud Oil", "Artisanal Floral"],
     },
     {
-      name: "Luxury Living & Beds",
+      name: "Mattresses",
       slug: "importedbed",
-      subCategories: ["Ergonomic Mattresses", "Artisan Bed Frames", "Organic Linen Sets"],
+      subCategories: ["Organic Latex Mattresses", "Ergonomic Mattresses", "Orthopedic Mattresses", "Mattress Toppers & Covers"],
     },
   ]);
 

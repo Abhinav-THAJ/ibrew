@@ -32,7 +32,7 @@ const CATEGORY_NAMES: Record<string, string> = {
   coffee: "Artisanal Coffee",
   spices: "Malabar Spices",
   perfumeoil: "Rare Fragrance Oils",
-  importedbed: "Luxury Sleep & Living",
+  importedbed: "Mattresses",
 };
 
 function SingleProductContent() {

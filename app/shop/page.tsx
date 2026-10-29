@@ -96,7 +96,7 @@ function ShopContent() {
     { id: "coffee", label: "Estate Coffee", icon: Coffee },
     { id: "spices", label: "Estate Spices", icon: Leaf },
     { id: "perfumeoil", label: "Rare Fragrance Oils", icon: Flower2 },
-    { id: "importedbed", label: "Luxury Living & Beds", icon: BedDouble },
+    { id: "importedbed", label: "Mattresses", icon: BedDouble },
   ]);
 
   useEffect(() => {

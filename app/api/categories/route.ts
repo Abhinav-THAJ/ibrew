@@ -25,11 +25,11 @@ const DEFAULT_CATEGORIES = [
     subCategories: ["Pure Attar Distillate", "Aged Oud Oil", "Artisanal Floral"],
   },
   {
-    name: "Luxury Living & Beds",
+    name: "Mattresses",
     slug: "importedbed",
-    description: "Restorative European sleep ergonomics and biological organic bedding.",
+    description: "7-zone ergonomic mattresses engineered for zero-pressure spinal alignment and deep restorative sleep.",
     image: "/images/importedbed/double-bed.jpeg",
-    subCategories: ["Ergonomic Mattresses", "Artisan Bed Frames", "Organic Linen Sets"],
+    subCategories: ["Organic Latex Mattresses", "Ergonomic Mattresses", "Orthopedic Mattresses", "Mattress Toppers & Covers"],
   },
 ];
 

@@ -105,8 +105,8 @@ export default function HomePage() {
       badge: "Artisanal Distillation",
     },
     {
-      title: "Luxury Sleep Systems",
-      tagline: "Organic Belgian latex & Nordic oak frames",
+      title: "Luxury Mattresses",
+      tagline: "Organic Belgian latex & ergonomic sleep systems",
       desc: "7-zone ergonomic mattresses engineered for zero-pressure spinal alignment, complemented by 800TC long-staple Egyptian Giza sheets.",
       image: "/images/importedbed/double-bed.jpeg",
       href: "/shop?category=importedbed",
@@ -176,7 +176,7 @@ export default function HomePage() {
           </h1>
 
           <p className="mx-auto max-w-2xl text-sm sm:text-base lg:text-lg text-[#D5C9BC] leading-relaxed">
-            From the mist-cloaked canopy of Western Ghats coffee estates to time-aged agarwood stills and European artisan bedrooms. Welcome to the quiet luxury of authentic craft.
+            From the mist-cloaked canopy of Western Ghats coffee estates to time-aged agarwood stills and European artisan mattresses. Welcome to the quiet luxury of authentic craft.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
