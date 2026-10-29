@@ -75,7 +75,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-24 sm:space-y-32 pb-16">
+    <div className="space-y-24 sm:space-y-32 pb-16 bg-[#120F0D] text-[#FAF7F2]">
       
       {/* 1. HERO SECTION */}
       <section className="relative min-h-[82vh] lg:min-h-[88vh] flex items-center justify-center overflow-hidden bg-[#171311] text-[#FAF7F2]">
@@ -88,11 +88,11 @@ export default function HomePage() {
             priority
             className="object-cover object-center opacity-40 scale-105 transition-transform duration-1000 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#171311] via-[#171311]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#120F0D] via-[#120F0D]/60 to-transparent" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#D6B27C]/30 bg-[#29221D]/60 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#D6B27C]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#D6B27C]/30 bg-[#29221D]/70 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#D6B27C]">
             <Sparkles size={13} />
             <span>Artisanal Provenance &amp; Rare Sourcing</span>
           </div>
@@ -102,14 +102,14 @@ export default function HomePage() {
             <span className="italic font-light text-[#E8DCCF]">Brewed for Living.</span>
           </h1>
 
-          <p className="mx-auto max-w-2xl text-sm sm:text-base lg:text-lg text-[#C4B7A7] leading-relaxed">
+          <p className="mx-auto max-w-2xl text-sm sm:text-base lg:text-lg text-[#D5C9BC] leading-relaxed">
             From the mist-cloaked canopy of Western Ghats coffee estates to time-aged agarwood stills and European artisan bedrooms. Welcome to the quiet luxury of authentic craft.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/shop"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#171311] px-8 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] px-8 py-4 text-xs sm:text-sm font-bold tracking-widest uppercase transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95"
             >
               Explore Collection <ArrowRight size={16} />
             </Link>
@@ -126,13 +126,13 @@ export default function HomePage() {
       {/* 2. THE 4 PILLARS OF PROVENANCE */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <p className="text-xs font-bold tracking-widest uppercase text-[#A85A34]">
+          <p className="text-xs font-bold tracking-widest uppercase text-[#D6B27C]">
             Curated Domains
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#1D1815]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white">
             Four Pillars of Craft
           </h2>
-          <p className="text-sm text-[#1D1815]/70 leading-relaxed">
+          <p className="text-sm text-[#C4B7A7] leading-relaxed">
             Every offering is sourced through generational estate relationships, free from industrial shortcuts.
           </p>
         </div>
@@ -144,37 +144,37 @@ export default function HomePage() {
               <Link
                 key={pillar.title}
                 href={pillar.href}
-                className="group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-[#1D1815]/8 p-5 transition-all duration-300 hover:shadow-xl hover:border-[#A85A34]/30"
+                className="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1E1916] border border-white/10 p-5 transition-all duration-300 hover:shadow-2xl hover:border-[#D6B27C]/40"
               >
-                <div className="relative h-64 w-full overflow-hidden rounded-xl bg-[#F5EFEB]">
+                <div className="relative h-64 w-full overflow-hidden rounded-xl bg-white/5">
                   <Image
                     src={pillar.image}
                     alt={pillar.title}
                     fill
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                   />
-                  <div className="absolute top-3 left-3 bg-[#1D1815]/80 backdrop-blur-sm text-[#FAF7F2] text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full">
+                  <div className="absolute top-3 left-3 bg-[#120F0D]/90 backdrop-blur-sm text-[#FAF7F2] text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border border-white/10">
                     {pillar.badge}
                   </div>
                 </div>
 
                 <div className="pt-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-2 text-[#A85A34] mb-1.5">
+                    <div className="flex items-center gap-2 text-[#D6B27C] mb-1.5">
                       <Icon size={16} strokeWidth={2} />
                       <span className="text-[11px] font-bold uppercase tracking-wider">
                         {pillar.tagline}
                       </span>
                     </div>
-                    <h3 className="text-xl font-serif font-bold text-[#1D1815] group-hover:text-[#A85A34] transition-colors">
+                    <h3 className="text-xl font-serif font-bold text-white group-hover:text-[#D6B27C] transition-colors">
                       {pillar.title}
                     </h3>
-                    <p className="mt-2 text-xs text-[#1D1815]/65 leading-relaxed line-clamp-3">
+                    <p className="mt-2 text-xs text-[#C4B7A7] leading-relaxed line-clamp-3">
                       {pillar.desc}
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-[#1D1815]/8 flex items-center justify-between text-xs font-semibold text-[#1D1815] group-hover:text-[#A85A34]">
+                  <div className="mt-5 pt-3 border-t border-white/8 flex items-center justify-between text-xs font-semibold text-white group-hover:text-[#D6B27C]">
                     <span>View Offerings</span>
                     <ChevronRight size={15} className="transition-transform group-hover:translate-x-1" />
                   </div>
@@ -189,20 +189,20 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <p className="text-xs font-bold tracking-widest uppercase text-[#A85A34]">
+            <p className="text-xs font-bold tracking-widest uppercase text-[#D6B27C]">
               Private Reserve
             </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#1D1815] mt-1.5">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white mt-1.5">
               The Artisan Selection
             </h2>
-            <p className="text-xs sm:text-sm text-[#1D1815]/70 mt-2 max-w-lg">
+            <p className="text-xs sm:text-sm text-[#C4B7A7] mt-2 max-w-lg">
               Freshly roasted micro-lot coffees, extra-bold green cardamoms, and rare attars available in strictly limited seasonal batches.
             </p>
           </div>
 
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-[#1D1815] hover:text-[#A85A34] pb-1 border-b border-[#1D1815]/30 hover:border-[#A85A34] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-[#D6B27C] hover:text-white pb-1 border-b border-[#D6B27C] transition-colors"
           >
             <span>View Full Catalog (15 Items)</span>
             <ArrowRight size={14} />
@@ -215,9 +215,9 @@ export default function HomePage() {
             return (
               <article
                 key={product.id}
-                className="group flex flex-col bg-white rounded-2xl border border-[#1D1815]/8 overflow-hidden transition-all duration-300 hover:shadow-lg"
+                className="group flex flex-col bg-[#1E1916] rounded-2xl border border-white/10 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-[#D6B27C]/40"
               >
-                <div className="relative h-72 w-full overflow-hidden bg-[#F5EFEB]">
+                <div className="relative h-72 w-full overflow-hidden bg-white/5">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -225,12 +225,12 @@ export default function HomePage() {
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-106"
                   />
                   {product.badge && (
-                    <span className="absolute top-3 left-3 bg-[#1D1815] text-[#FAF7F2] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                    <span className="absolute top-3 left-3 bg-[#120F0D] text-[#FAF7F2] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10">
                       {product.badge}
                     </span>
                   )}
                   {product.weightOrSize && (
-                    <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-[#1D1815] text-[10px] font-semibold px-2.5 py-1 rounded-full border border-[#1D1815]/10">
+                    <span className="absolute bottom-3 right-3 bg-[#120F0D]/90 backdrop-blur-sm text-white text-[10px] font-semibold px-2.5 py-1 rounded-full border border-white/10">
                       {product.weightOrSize}
                     </span>
                   )}
@@ -238,34 +238,34 @@ export default function HomePage() {
 
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div>
-                    <div className="flex items-center justify-between text-[11px] text-[#1D1815]/60 mb-1.5">
-                      <span className="uppercase tracking-wider font-semibold text-[#A85A34]">
+                    <div className="flex items-center justify-between text-[11px] text-[#C4B7A7] mb-1.5">
+                      <span className="uppercase tracking-wider font-semibold text-[#D6B27C]">
                         {product.subCategory}
                       </span>
                       <div className="flex items-center gap-1 text-[#D6B27C]">
                         <Star size={12} fill="#D6B27C" />
-                        <span className="font-bold text-[#1D1815] text-[11px]">
+                        <span className="font-bold text-white text-[11px]">
                           {product.rating}
                         </span>
-                        <span className="text-[#1D1815]/40">({product.reviewsCount})</span>
+                        <span className="text-white/40">({product.reviewsCount})</span>
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-serif font-bold text-[#1D1815] leading-snug group-hover:text-[#A85A34] transition-colors">
+                    <h3 className="text-lg font-serif font-bold text-white leading-snug group-hover:text-[#D6B27C] transition-colors">
                       {product.name}
                     </h3>
-                    <p className="text-xs text-[#1D1815]/65 mt-1.5 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#C4B7A7] mt-1.5 line-clamp-2 leading-relaxed">
                       {product.tagline}
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#1D1815]/8 flex items-center justify-between gap-3">
+                  <div className="pt-3 border-t border-white/8 flex items-center justify-between gap-3">
                     <div>
-                      <div className="text-base font-bold text-[#1D1815]">
+                      <div className="text-base font-bold text-white">
                         {formatPrice(product.price)}
                       </div>
                       {product.mrp > product.price && (
-                        <div className="text-[11px] text-[#1D1815]/40 line-through">
+                        <div className="text-[11px] text-white/40 line-through">
                           MRP {formatPrice(product.mrp)}
                         </div>
                       )}
@@ -274,10 +274,10 @@ export default function HomePage() {
                     <button
                       type="button"
                       onClick={() => handleAdd(product)}
-                      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all active:scale-95 shadow-sm ${
+                      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all active:scale-95 shadow-md ${
                         isAdded
-                          ? "bg-[#355E3B] text-white"
-                          : "bg-[#1D1815] hover:bg-[#A85A34] text-white"
+                          ? "bg-[#52B788] text-white"
+                          : "bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D]"
                       }`}
                     >
                       {isAdded ? (
@@ -300,7 +300,7 @@ export default function HomePage() {
 
       {/* 4. EDITORIAL PHILOSOPHY & STORY */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-[#241E1A] text-[#FAF7F2] shadow-xl border border-[#3A3029]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-[#1E1916] text-[#FAF7F2] shadow-xl border border-white/10">
           
           <div className="lg:col-span-6 relative min-h-[360px] lg:min-h-full">
             <Image
@@ -309,36 +309,36 @@ export default function HomePage() {
               fill
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-transparent via-transparent to-[#241E1A]" />
+            <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-transparent via-transparent to-[#1E1916]" />
           </div>
 
           <div className="lg:col-span-6 p-8 sm:p-12 lg:p-16 flex flex-col justify-center space-y-6">
             <span className="text-xs font-bold tracking-widest uppercase text-[#D6B27C]">
               The ibrew Manifesto
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal text-white leading-tight">
               An Obsession with Purity and Slower Extraction.
             </h2>
-            <p className="text-xs sm:text-sm text-[#C4B7A7] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#D5C9BC] leading-relaxed">
               In a commercial world obsessed with volume, we step back. Our coffee beans are shade-grown beneath century-old silver oaks to slow their cherry maturation. Our cardamoms are sun-dried on bamboo mats in the mist of Idukki. Our Cambodian Oud is macerated across a decade in brass vessel distillers.
             </p>
-            <p className="text-xs sm:text-sm text-[#C4B7A7] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#D5C9BC] leading-relaxed">
               We believe luxury is not an emblem, but the quiet satisfaction of knowing who grew your crop and where it came from.
             </p>
 
             <div className="pt-4 flex items-center gap-6">
               <div>
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-[#FAF7F2]">100%</p>
+                <p className="text-2xl sm:text-3xl font-serif font-bold text-white">100%</p>
                 <p className="text-[11px] text-[#A69989] uppercase tracking-wider">Direct Origin</p>
               </div>
-              <div className="h-10 w-[1px] bg-[#3A3029]" />
+              <div className="h-10 w-[1px] bg-white/15" />
               <div>
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-[#FAF7F2]">4,200ft</p>
+                <p className="text-2xl sm:text-3xl font-serif font-bold text-white">4,200ft</p>
                 <p className="text-[11px] text-[#A69989] uppercase tracking-wider">Estate Altitude</p>
               </div>
-              <div className="h-10 w-[1px] bg-[#3A3029]" />
+              <div className="h-10 w-[1px] bg-white/15" />
               <div>
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-[#FAF7F2]">Zero</p>
+                <p className="text-2xl sm:text-3xl font-serif font-bold text-white">Zero</p>
                 <p className="text-[11px] text-[#A69989] uppercase tracking-wider">Artificial Fillers</p>
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function HomePage() {
             <div className="pt-2">
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#171311] px-6 py-3 text-xs font-bold tracking-widest uppercase transition-colors"
+                className="inline-flex items-center gap-2 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] px-6 py-3 text-xs font-bold tracking-widest uppercase transition-colors"
               >
                 Read Full Story <ArrowRight size={14} />
               </Link>
@@ -357,20 +357,20 @@ export default function HomePage() {
 
       {/* 5. CONCIERGE CALLOUT & WHOLESALE */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-[#FAF7F2] border border-[#1D1815]/10 p-8 sm:p-12 text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#A85A34]">
+        <div className="rounded-3xl bg-[#1E1916] border border-white/10 p-8 sm:p-12 text-center max-w-3xl mx-auto space-y-4">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#D6B27C]">
             Bespoke Concierge &amp; Wholesale
           </span>
-          <h2 className="text-3xl sm:text-4xl font-serif text-[#1D1815]">
+          <h2 className="text-3xl sm:text-4xl font-serif text-white">
             Supplying Cafes, Boutique Hotels &amp; Corporate Gifts
           </h2>
-          <p className="text-xs sm:text-sm text-[#1D1815]/70 max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#C4B7A7] max-w-xl mx-auto leading-relaxed">
             Need custom coffee roast profiles, bulk export spices, or branded corporate luxury gifting? Our concierge team curates bespoke packages tailored to your exact taste.
           </p>
           <div className="pt-2">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-[#1D1815] hover:bg-[#322923] text-white px-7 py-3.5 text-xs font-bold tracking-widest uppercase transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] px-7 py-3.5 text-xs font-bold tracking-widest uppercase transition-colors"
             >
               Request a Bespoke Quote <ArrowRight size={14} />
             </Link>

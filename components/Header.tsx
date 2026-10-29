@@ -61,7 +61,7 @@ export default function Header() {
   return (
     <>
       {/* 1. ANNOUNCEMENT BAR */}
-      <div className="bg-[#1D1815] text-[#E8DCCF] text-[11px] sm:text-xs font-medium tracking-widest uppercase py-2 px-4 text-center border-b border-[#2C2420]">
+      <div className="bg-[#0D0A09] text-[#E8DCCF] text-[11px] sm:text-xs font-medium tracking-widest uppercase py-2.5 px-4 text-center border-b border-[#241E1A]">
         <div className="mx-auto max-w-7xl flex items-center justify-center gap-2 sm:gap-4">
           <span className="hidden sm:inline">☕</span>
           <span>Complimentary Pan-India Delivery on Orders Above ₹999</span>
@@ -74,8 +74,8 @@ export default function Header() {
       <header
         className={`sticky top-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? "bg-[#FAF7F2]/95 backdrop-blur-md shadow-sm border-b border-[#1D1815]/10"
-            : "bg-[#FAF7F2] border-b border-[#1D1815]/8"
+            ? "bg-[#171311]/95 backdrop-blur-md shadow-lg border-b border-[#2C2420]"
+            : "bg-[#171311] border-b border-[#241E1A]"
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -86,7 +86,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="p-2 -ml-2 text-[#1D1815] hover:opacity-70 transition-opacity"
+                className="p-2 -ml-2 text-[#FAF7F2] hover:text-[#D6B27C] transition-colors"
                 aria-label="Open navigation menu"
               >
                 <Menu size={22} strokeWidth={1.75} />
@@ -102,7 +102,7 @@ export default function Header() {
                   width={140}
                   height={42}
                   priority
-                  className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="h-9 w-auto object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-[1.02]"
                 />
               </Link>
             </div>
@@ -115,15 +115,15 @@ export default function Header() {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`relative text-[13.5px] tracking-wide uppercase font-medium transition-colors duration-200 py-1 ${
+                    className={`relative text-[13.5px] tracking-widest uppercase font-medium transition-colors duration-200 py-1 ${
                       isActive
-                        ? "text-[#1D1815] font-semibold"
-                        : "text-[#1D1815]/75 hover:text-[#1D1815]"
+                        ? "text-[#D6B27C] font-semibold"
+                        : "text-[#E8DCCF]/80 hover:text-[#FAF7F2]"
                     }`}
                   >
                     {link.label}
                     {isActive && (
-                      <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#6E442B] rounded-full" />
+                      <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#D6B27C] rounded-full" />
                     )}
                   </Link>
                 );
@@ -136,7 +136,7 @@ export default function Header() {
               {/* Quick Search */}
               <Link
                 href="/shop"
-                className="p-2 text-[#1D1815]/80 hover:text-[#1D1815] hover:bg-[#1D1815]/5 rounded-full transition-colors"
+                className="p-2 text-[#E8DCCF]/80 hover:text-[#D6B27C] hover:bg-white/5 rounded-full transition-colors"
                 title="Search offerings"
               >
                 <Search size={19} strokeWidth={1.8} />
@@ -145,7 +145,7 @@ export default function Header() {
               {/* Admin Dashboard shortcut */}
               <Link
                 href="/admin"
-                className="hidden md:inline-flex items-center gap-1.5 text-xs text-[#1D1815]/70 hover:text-[#1D1815] px-2.5 py-1 rounded-full border border-[#1D1815]/15 hover:border-[#1D1815]/40 transition-colors"
+                className="hidden md:inline-flex items-center gap-1.5 text-xs text-[#E8DCCF]/70 hover:text-[#FAF7F2] px-2.5 py-1 rounded-full border border-white/15 hover:border-[#D6B27C] transition-colors"
                 title="Admin Studio"
               >
                 <Lock size={12} />
@@ -156,14 +156,14 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
-                className="relative flex items-center gap-2 bg-[#1D1815] hover:bg-[#322923] text-[#FAF7F2] px-3.5 py-2 sm:px-4 sm:py-2.2 rounded-full transition-all active:scale-95 shadow-sm"
+                className="relative flex items-center gap-2 bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] px-3.5 py-2 sm:px-4 sm:py-2 rounded-full transition-all active:scale-95 shadow-md font-bold"
                 aria-label={`Open Cart (${cartCount} items)`}
               >
-                <ShoppingBag size={17} strokeWidth={2} />
-                <span className="text-xs font-semibold tracking-wider uppercase hidden sm:inline">
+                <ShoppingBag size={17} strokeWidth={2.2} />
+                <span className="text-xs font-bold tracking-wider uppercase hidden sm:inline">
                   Bag
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#E8DCCF] text-[#1D1815] text-[11px] font-bold">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#120F0D] text-[#D6B27C] text-[11px] font-bold">
                   {cartCount}
                 </span>
               </button>
@@ -176,23 +176,23 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-[#1D1815]/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-[#FAF7F2] p-6 shadow-2xl flex flex-col justify-between">
+          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-[#171311] text-[#FAF7F2] p-6 shadow-2xl flex flex-col justify-between border-r border-[#2C2420]">
             <div>
-              <div className="flex items-center justify-between pb-6 border-b border-[#1D1815]/10">
+              <div className="flex items-center justify-between pb-6 border-b border-white/10">
                 <Image
                   src="/images/logo-ibrew.png"
                   alt="ibrew"
                   width={120}
                   height={36}
-                  className="h-8 w-auto object-contain"
+                  className="h-8 w-auto object-contain brightness-0 invert"
                 />
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-[#1D1815]/70 hover:text-[#1D1815]"
+                  className="p-2 text-white/70 hover:text-white"
                 >
                   <X size={20} />
                 </button>
@@ -205,8 +205,8 @@ export default function Header() {
                     href={link.href}
                     className={`text-xl font-medium tracking-tight transition-colors ${
                       pathname === link.href
-                        ? "text-[#6E442B] font-semibold"
-                        : "text-[#1D1815] hover:text-[#6E442B]"
+                        ? "text-[#D6B27C] font-semibold"
+                        : "text-[#FAF7F2] hover:text-[#D6B27C]"
                     }`}
                   >
                     {link.label}
@@ -214,22 +214,22 @@ export default function Header() {
                 ))}
                 <Link
                   href="/cart"
-                  className="text-xl font-medium text-[#1D1815] hover:text-[#6E442B] flex items-center justify-between pt-2 border-t border-[#1D1815]/10"
+                  className="text-xl font-medium text-[#FAF7F2] hover:text-[#D6B27C] flex items-center justify-between pt-2 border-t border-white/10"
                 >
                   <span>Shopping Bag</span>
-                  <span className="text-sm bg-[#1D1815] text-white px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-sm bg-[#D6B27C] text-[#120F0D] px-2 py-0.5 rounded-full font-bold">
                     {cartCount}
                   </span>
                 </Link>
               </nav>
             </div>
 
-            <div className="pt-6 border-t border-[#1D1815]/10 text-xs text-[#1D1815]/60 space-y-2">
+            <div className="pt-6 border-t border-white/10 text-xs text-[#C4B7A7] space-y-2">
               <p>Direct Inquiries: +91 99950 67188</p>
               <p>Email: concierge@ibrew.luxury</p>
               <Link
                 href="/admin"
-                className="inline-block mt-2 text-[#6E442B] font-semibold underline underline-offset-2"
+                className="inline-block mt-2 text-[#D6B27C] font-semibold underline underline-offset-2"
               >
                 Go to Admin Portal
               </Link>
@@ -242,56 +242,56 @@ export default function Header() {
       {cartOpen && (
         <div className="fixed inset-0 z-50">
           <div
-            className="fixed inset-0 bg-[#1D1815]/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
             onClick={() => setCartOpen(false)}
           />
-          <aside className="fixed inset-y-0 right-0 w-full max-w-md bg-[#FAF7F2] shadow-2xl flex flex-col">
+          <aside className="fixed inset-y-0 right-0 w-full max-w-md bg-[#181412] text-[#FAF7F2] shadow-2xl flex flex-col border-l border-[#2C2420]">
             
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#1D1815]/10">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <ShoppingBag size={19} className="text-[#6E442B]" />
-                <h2 className="text-base font-bold uppercase tracking-wider text-[#1D1815]">
+                <ShoppingBag size={19} className="text-[#D6B27C]" />
+                <h2 className="text-base font-bold uppercase tracking-wider text-[#FAF7F2]">
                   Your Bag ({cartCount})
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setCartOpen(false)}
-                className="p-1.5 text-[#1D1815]/60 hover:text-[#1D1815] hover:bg-[#1D1815]/5 rounded-full transition-colors"
+                className="p-1.5 text-white/60 hover:text-white hover:bg-white/5 rounded-full transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div className="bg-[#EFE8DF] px-6 py-3 border-b border-[#1D1815]/8 text-xs text-[#1D1815]">
+            <div className="bg-[#241E1A] px-6 py-3 border-b border-white/8 text-xs text-[#E8DCCF]">
               {subtotal >= 999 ? (
-                <p className="flex items-center gap-1.5 text-[#355E3B] font-semibold">
+                <p className="flex items-center gap-1.5 text-[#52B788] font-semibold">
                   <Sparkles size={14} /> You unlocked complimentary standard delivery!
                 </p>
               ) : (
                 <p>
-                  Add <span className="font-bold">{formatPrice(999 - subtotal)}</span> more
+                  Add <span className="font-bold text-[#D6B27C]">{formatPrice(999 - subtotal)}</span> more
                   to unlock complimentary pan-India shipping.
                 </p>
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-[#1D1815]/8">
+            <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-white/8">
               {cartItems.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center py-16 text-[#1D1815]/60">
-                  <div className="h-16 w-16 rounded-full bg-[#E8DCCF]/50 flex items-center justify-center mb-4 text-[#6E442B]">
+                <div className="h-full flex flex-col items-center justify-center text-center py-16 text-[#C4B7A7]">
+                  <div className="h-16 w-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-[#D6B27C]">
                     <ShoppingBag size={28} strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-lg font-bold text-[#1D1815] font-serif">
+                  <h3 className="text-lg font-bold text-white font-serif">
                     Your bag is empty
                   </h3>
-                  <p className="text-xs text-[#1D1815]/70 max-w-xs mt-1.5 mb-6">
+                  <p className="text-xs text-[#C4B7A7] max-w-xs mt-1.5 mb-6">
                     Discover our freshly roasted single-origins, emerald spices, and fine oud oils.
                   </p>
                   <Link
                     href="/shop"
                     onClick={() => setCartOpen(false)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1D1815] text-[#FAF7F2] text-xs font-semibold tracking-wider uppercase transition hover:bg-[#322923]"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#D6B27C] text-[#120F0D] text-xs font-bold tracking-wider uppercase transition hover:bg-[#C29B38]"
                   >
                     Browse Collection <ArrowRight size={14} />
                   </Link>
@@ -299,7 +299,7 @@ export default function Header() {
               ) : (
                 cartItems.map((item) => (
                   <article key={item.id} className="py-4 flex gap-4 items-center">
-                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-[#E8DCCF]/40 border border-[#1D1815]/8">
+                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white/5 border border-white/10">
                       <img
                         src={item.image}
                         alt={item.name}
@@ -307,15 +307,15 @@ export default function Header() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-semibold text-[#1D1815] truncate">
+                      <h4 className="text-sm font-semibold text-white truncate">
                         {item.name}
                       </h4>
-                      <p className="text-xs text-[#6E442B] font-bold mt-0.5">
+                      <p className="text-xs text-[#D6B27C] font-bold mt-0.5">
                         {formatPrice(item.price)}
                       </p>
 
                       <div className="flex items-center justify-between mt-3">
-                        <div className="inline-flex items-center rounded-full border border-[#1D1815]/20 bg-white">
+                        <div className="inline-flex items-center rounded-full border border-white/20 bg-[#241E1A]">
                           <button
                             type="button"
                             onClick={() => {
@@ -325,18 +325,18 @@ export default function Header() {
                                 updateQuantity(item.id, item.quantity - 1);
                               }
                             }}
-                            className="p-1.5 text-[#1D1815]/70 hover:text-[#1D1815]"
+                            className="p-1.5 text-white/70 hover:text-white"
                             aria-label="Decrease quantity"
                           >
                             <Minus size={12} />
                           </button>
-                          <span className="w-6 text-center text-xs font-semibold">
+                          <span className="w-6 text-center text-xs font-bold text-white">
                             {item.quantity}
                           </span>
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1.5 text-[#1D1815]/70 hover:text-[#1D1815]"
+                            className="p-1.5 text-white/70 hover:text-white"
                             aria-label="Increase quantity"
                           >
                             <Plus size={12} />
@@ -346,7 +346,7 @@ export default function Header() {
                         <button
                           type="button"
                           onClick={() => removeFromCart(item.id)}
-                          className="text-[#1D1815]/40 hover:text-red-700 transition-colors p-1"
+                          className="text-white/40 hover:text-red-400 transition-colors p-1"
                           title="Remove item"
                         >
                           <Trash2 size={15} />
@@ -359,28 +359,28 @@ export default function Header() {
             </div>
 
             {cartItems.length > 0 && (
-              <div className="p-6 bg-[#FFFFFF] border-t border-[#1D1815]/10 space-y-4">
+              <div className="p-6 bg-[#1F1916] border-t border-white/10 space-y-4">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#1D1815]/70">Subtotal</span>
-                  <span className="font-bold text-base text-[#1D1815]">
+                  <span className="text-[#C4B7A7]">Subtotal</span>
+                  <span className="font-bold text-base text-white">
                     {formatPrice(subtotal)}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#1D1815]/50">
+                <p className="text-[11px] text-[#8A7D71]">
                   Applicable taxes and express delivery calculated during checkout.
                 </p>
                 <div className="grid grid-cols-2 gap-3 pt-1">
                   <Link
                     href="/cart"
                     onClick={() => setCartOpen(false)}
-                    className="col-span-2 flex items-center justify-center gap-2 rounded-full bg-[#1D1815] text-[#FAF7F2] py-3.5 text-xs font-bold tracking-widest uppercase transition hover:bg-[#322923] shadow-md"
+                    className="col-span-2 flex items-center justify-center gap-2 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] py-3.5 text-xs font-bold tracking-widest uppercase transition-colors shadow-lg"
                   >
                     View Bag &amp; Checkout <ArrowRight size={15} />
                   </Link>
                   <button
                     type="button"
                     onClick={() => setCartOpen(false)}
-                    className="col-span-2 text-center text-xs font-semibold text-[#1D1815]/70 hover:text-[#1D1815] py-1"
+                    className="col-span-2 text-center text-xs font-semibold text-[#C4B7A7] hover:text-white py-1"
                   >
                     Continue Browsing
                   </button>

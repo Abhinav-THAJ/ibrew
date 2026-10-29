@@ -36,14 +36,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${plusJakarta.variable} h-full antialiased`}
+      className={`${playfair.variable} ${plusJakarta.variable} h-full antialiased dark`}
     >
-      <body className="flex min-h-full flex-col bg-[#FAF7F2] text-[#1D1815] font-sans selection:bg-[#E8DCCF] selection:text-[#1D1815]">
+      <body className="flex min-h-full flex-col bg-[#120F0D] text-[#FAF7F2] font-sans selection:bg-[#D6B27C] selection:text-[#120F0D]">
         <CartProvider>
-          <Suspense fallback={<div className="h-18 bg-[#FAF7F2] border-b border-[#1D1815]/8" />}>
+          <Suspense fallback={<div className="h-18 bg-[#171311] border-b border-[#29221D]" />}>
             <Header />
           </Suspense>
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 bg-[#120F0D]">{children}</main>
           <Footer />
         </CartProvider>
       </body>

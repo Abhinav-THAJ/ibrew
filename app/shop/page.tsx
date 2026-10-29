@@ -141,10 +141,10 @@ function ShopContent() {
   };
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 bg-[#120F0D] text-[#FAF7F2]">
       
       {/* 1. EDITORIAL HEADER */}
-      <section className="bg-[#1D1815] text-[#FAF7F2] py-14 sm:py-20 border-b border-[#2C2420]">
+      <section className="bg-[#171311] text-[#FAF7F2] py-14 sm:py-20 border-b border-[#2C2420]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <p className="text-xs font-bold tracking-widest uppercase text-[#D6B27C]">
             ibrew Catalog &amp; Private Reserve
@@ -159,7 +159,7 @@ function ShopContent() {
       </section>
 
       {/* 2. CATEGORY PILLS & TOOLBAR */}
-      <div className="sticky top-18 z-30 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#1D1815]/10 py-4 shadow-sm">
+      <div className="sticky top-18 z-30 bg-[#171311]/95 backdrop-blur-md border-b border-white/10 py-4 shadow-lg">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4">
           
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
@@ -181,15 +181,15 @@ function ShopContent() {
                   }}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase shrink-0 transition-all active:scale-95 ${
                     isActive
-                      ? "bg-[#1D1815] text-white shadow-md"
-                      : "bg-white text-[#1D1815]/70 hover:text-[#1D1815] border border-[#1D1815]/10 hover:border-[#1D1815]/30"
+                      ? "bg-[#D6B27C] text-[#120F0D] shadow-md font-bold"
+                      : "bg-[#201A17] text-[#FAF7F2] hover:bg-[#2A231F] border border-white/10"
                   }`}
                 >
-                  <Icon size={14} className={isActive ? "text-[#D6B27C]" : "text-[#A85A34]"} />
+                  <Icon size={14} className={isActive ? "text-[#120F0D]" : "text-[#D6B27C]"} />
                   <span>{cat.label}</span>
                   <span
                     className={`ml-1 text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                      isActive ? "bg-[#3A3029] text-[#D6B27C]" : "bg-[#F5EFEB] text-[#1D1815]/50"
+                      isActive ? "bg-[#120F0D] text-[#D6B27C]" : "bg-white/10 text-white/70"
                     }`}
                   >
                     {count}
@@ -199,21 +199,21 @@ function ShopContent() {
             })}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-[#1D1815]/8">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-white/8">
             <div className="relative flex-1 max-w-md">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1D1815]/40" />
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name, origin, or notes..."
-                className="w-full pl-9 pr-9 py-2 rounded-full bg-white border border-[#1D1815]/15 text-xs text-[#1D1815] placeholder-[#1D1815]/40 focus:outline-none focus:border-[#6E442B]"
+                className="w-full pl-9 pr-9 py-2 rounded-full bg-[#1E1916] border border-white/15 text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#D6B27C]"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1D1815]/40 hover:text-[#1D1815]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
                 >
                   <X size={14} />
                 </button>
@@ -227,8 +227,8 @@ function ShopContent() {
                   onClick={() => setActiveSubCategory("all")}
                   className={`px-3 py-1 rounded-full font-medium transition-colors ${
                     activeSubCategory === "all"
-                      ? "bg-[#6E442B] text-white"
-                      : "bg-[#F5EFEB] text-[#1D1815]/70 hover:bg-[#E8DCCF]"
+                      ? "bg-[#D6B27C] text-[#120F0D] font-bold"
+                      : "bg-[#201A17] text-white/80 hover:bg-[#2A231F]"
                   }`}
                 >
                   All Types
@@ -240,8 +240,8 @@ function ShopContent() {
                     onClick={() => setActiveSubCategory(sub)}
                     className={`px-3 py-1 rounded-full font-medium whitespace-nowrap transition-colors ${
                       activeSubCategory === sub
-                        ? "bg-[#6E442B] text-white"
-                        : "bg-[#F5EFEB] text-[#1D1815]/70 hover:bg-[#E8DCCF]"
+                        ? "bg-[#D6B27C] text-[#120F0D] font-bold"
+                        : "bg-[#201A17] text-white/80 hover:bg-[#2A231F]"
                     }`}
                   >
                     {sub}
@@ -251,7 +251,7 @@ function ShopContent() {
             )}
 
             <div className="flex items-center gap-2 self-end sm:self-auto">
-              <label htmlFor="shop-sort" className="text-xs text-[#1D1815]/60 flex items-center gap-1">
+              <label htmlFor="shop-sort" className="text-xs text-[#C4B7A7] flex items-center gap-1">
                 <ArrowUpDown size={12} />
                 <span>Sort:</span>
               </label>
@@ -259,7 +259,7 @@ function ShopContent() {
                 id="shop-sort"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="rounded-full bg-white border border-[#1D1815]/15 px-3 py-1.5 text-xs font-semibold text-[#1D1815] focus:outline-none focus:border-[#6E442B]"
+                className="rounded-full bg-[#1E1916] border border-white/15 px-3 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-[#D6B27C]"
               >
                 <option value="featured">Featured Curations</option>
                 <option value="price-asc">Price: Low to High</option>
@@ -273,9 +273,9 @@ function ShopContent() {
 
       {/* 3. PRODUCT CATALOG GRID */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="flex items-center justify-between mb-6 text-xs text-[#1D1815]/60">
+        <div className="flex items-center justify-between mb-6 text-xs text-[#C4B7A7]">
           <span>
-            Showing <strong className="text-[#1D1815]">{filteredProducts.length}</strong> offerings
+            Showing <strong className="text-white">{filteredProducts.length}</strong> offerings
           </span>
           {activeCategory !== "all" && (
             <button
@@ -284,7 +284,7 @@ function ShopContent() {
                 setActiveCategory("all");
                 setActiveSubCategory("all");
               }}
-              className="text-[#A85A34] hover:underline"
+              className="text-[#D6B27C] hover:underline"
             >
               Reset filter
             </button>
@@ -292,12 +292,12 @@ function ShopContent() {
         </div>
 
         {filteredProducts.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-[#1D1815]/20 p-16 text-center space-y-4 max-w-md mx-auto my-12">
+          <div className="rounded-3xl border border-dashed border-white/20 p-16 text-center space-y-4 max-w-md mx-auto my-12">
             <p className="text-3xl">🌿</p>
-            <h3 className="text-xl font-serif font-bold text-[#1D1815]">
+            <h3 className="text-xl font-serif font-bold text-white">
               No offerings matched your filter
             </h3>
-            <p className="text-xs text-[#1D1815]/70">
+            <p className="text-xs text-[#C4B7A7]">
               Try clearing your search query or selecting another category from above.
             </p>
             <button
@@ -307,7 +307,7 @@ function ShopContent() {
                 setActiveCategory("all");
                 setActiveSubCategory("all");
               }}
-              className="inline-flex items-center gap-2 rounded-full bg-[#1D1815] text-white px-5 py-2.5 text-xs font-semibold tracking-wider uppercase"
+              className="inline-flex items-center gap-2 rounded-full bg-[#D6B27C] text-[#120F0D] px-5 py-2.5 text-xs font-bold tracking-wider uppercase"
             >
               Show All Offerings
             </button>
@@ -319,9 +319,9 @@ function ShopContent() {
               return (
                 <article
                   key={product.id}
-                  className="group flex flex-col bg-white rounded-2xl border border-[#1D1815]/8 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-[#6E442B]/30"
+                  className="group flex flex-col bg-[#1E1916] rounded-2xl border border-white/10 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-[#D6B27C]/40"
                 >
-                  <div className="relative h-64 w-full overflow-hidden bg-[#F5EFEB]">
+                  <div className="relative h-64 w-full overflow-hidden bg-white/5">
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -329,12 +329,12 @@ function ShopContent() {
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-106"
                     />
                     {product.badge && (
-                      <span className="absolute top-3 left-3 bg-[#1D1815] text-[#FAF7F2] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+                      <span className="absolute top-3 left-3 bg-[#120F0D] text-[#FAF7F2] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-white/10">
                         {product.badge}
                       </span>
                     )}
                     {product.origin && (
-                      <span className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm text-[#1D1815] text-[10px] font-medium px-2 py-0.5 rounded-full border border-[#1D1815]/10">
+                      <span className="absolute bottom-3 left-3 bg-[#120F0D]/90 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full border border-white/10">
                         {product.origin}
                       </span>
                     )}
@@ -342,33 +342,33 @@ function ShopContent() {
 
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                     <div>
-                      <div className="flex items-center justify-between text-[11px] text-[#1D1815]/60 mb-1">
-                        <span className="uppercase tracking-wider font-semibold text-[#A85A34]">
+                      <div className="flex items-center justify-between text-[11px] text-[#C4B7A7] mb-1">
+                        <span className="uppercase tracking-wider font-semibold text-[#D6B27C]">
                           {product.subCategory}
                         </span>
                         <div className="flex items-center gap-1 text-[#D6B27C]">
                           <Star size={11} fill="#D6B27C" />
-                          <span className="font-bold text-[#1D1815] text-[11px]">
+                          <span className="font-bold text-white text-[11px]">
                             {product.rating}
                           </span>
                         </div>
                       </div>
 
-                      <h3 className="text-base font-serif font-bold text-[#1D1815] leading-snug group-hover:text-[#A85A34] transition-colors">
+                      <h3 className="text-base font-serif font-bold text-white leading-snug group-hover:text-[#D6B27C] transition-colors">
                         {product.name}
                       </h3>
-                      <p className="text-xs text-[#1D1815]/65 mt-1 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[#C4B7A7] mt-1 line-clamp-2 leading-relaxed">
                         {product.tagline || product.description}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-[#1D1815]/8 flex items-center justify-between gap-2">
+                    <div className="pt-3 border-t border-white/8 flex items-center justify-between gap-2">
                       <div>
-                        <div className="text-sm sm:text-base font-bold text-[#1D1815]">
+                        <div className="text-sm sm:text-base font-bold text-white">
                           {formatPrice(product.price)}
                         </div>
                         {product.mrp > product.price && (
-                          <div className="text-[10px] text-[#1D1815]/40 line-through">
+                          <div className="text-[10px] text-white/40 line-through">
                             MRP {formatPrice(product.mrp)}
                           </div>
                         )}
@@ -379,8 +379,8 @@ function ShopContent() {
                         onClick={() => handleAdd(product)}
                         className={`inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-xs font-bold tracking-wider uppercase transition-all active:scale-95 shadow-sm ${
                           isAdded
-                            ? "bg-[#355E3B] text-white"
-                            : "bg-[#1D1815] hover:bg-[#A85A34] text-white"
+                            ? "bg-[#52B788] text-white"
+                            : "bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D]"
                         }`}
                       >
                         {isAdded ? (
@@ -408,7 +408,7 @@ function ShopContent() {
 
 export default function ShopPage() {
   return (
-    <Suspense fallback={<div className="py-24 text-center text-sm font-serif">Loading ibrew catalog...</div>}>
+    <Suspense fallback={<div className="py-24 text-center text-sm font-serif text-[#FAF7F2]">Loading ibrew catalog...</div>}>
       <ShopContent />
     </Suspense>
   );
