@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
 import {
-  INITIAL_PRODUCTS,
   formatPrice,
   ProductItem,
 } from "@/data/products";
@@ -43,16 +42,13 @@ function SingleProductContent() {
 
   const { addToCart } = useCart();
 
-  const staticMatch = useMemo(() => {
-    return INITIAL_PRODUCTS.find((p) => p.id === productId);
-  }, [productId]);
-
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<number | null>(0);
   const [activeImage, setActiveImage] = useState<string>("");
   const [dbProduct, setDbProduct] = useState<ProductItem | null>(null);
-  const [loading, setLoading] = useState(!staticMatch);
+  const [relatedProducts, setRelatedProducts] = useState<ProductItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchFromApi() {
@@ -99,7 +95,7 @@ function SingleProductContent() {
     fetchFromApi();
   }, [productId]);
 
-  const product = dbProduct || staticMatch;
+  const product = dbProduct;
 
   const allGalleryImages: string[] = useMemo(() => {
     if (!product) return [];
@@ -115,13 +111,46 @@ function SingleProductContent() {
     }
   }, [product]);
 
-  // 2. Related items from the same category
-  const relatedProducts = useMemo(() => {
-    if (!product) return [];
-    return INITIAL_PRODUCTS.filter(
-      (p) => p.category === product.category && p.id !== product.id
-    ).slice(0, 4);
-  }, [product]);
+  // Load related items live from backend database
+  useEffect(() => {
+    if (!product?.category) return;
+    const currentCategory = product.category;
+    const currentId = product.id;
+    async function loadRelated() {
+      try {
+        const res = await fetch(`/api/products?category=${encodeURIComponent(currentCategory)}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            const mapped = data
+              .filter((item: any) => item._id !== currentId)
+              .slice(0, 4)
+              .map((item: any) => ({
+                id: item._id,
+                name: item.name,
+                tagline: item.description?.slice(0, 90) || "",
+                description: item.description || "",
+                category: item.category,
+                subCategory: item.subCategory || "Estate Selection",
+                price: item.price,
+                mrp: item.mrp || item.price,
+                rating: 5.0,
+                reviewsCount: 14,
+                image: item.images?.[0]?.url || "/images/coffebags.png",
+                badge: item.badge || undefined,
+                stock: item.stock || 25,
+                weightOrSize: item.subCategory || "Standard",
+                origin: "Estate Direct",
+              }));
+            setRelatedProducts(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load related products from backend:", err);
+      }
+    }
+    loadRelated();
+  }, [product?.category, product?.id]);
 
   const handleAddToCart = () => {
     if (!product) return;

@@ -16,20 +16,21 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
-import { INITIAL_PRODUCTS, formatPrice, ProductItem } from "@/data/products";
+import { formatPrice, ProductItem } from "@/data/products";
 
 export default function HomePage() {
   const { addToCart } = useCart();
   const [addedId, setAddedId] = useState<string | null>(null);
-  const [products, setProducts] = useState<ProductItem[]>(INITIAL_PRODUCTS);
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   useEffect(() => {
     async function loadFeatured() {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/products", { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             const mapped: ProductItem[] = data.map((item: any) => ({
               id: item._id,
               name: item.name,
@@ -52,13 +53,17 @@ export default function HomePage() {
           }
         }
       } catch (e) {
-        console.warn("Using static fallback:", e);
+        console.warn("Could not fetch products from backend:", e);
+      } finally {
+        setLoadingProducts(false);
       }
     }
     loadFeatured();
   }, []);
 
-  const featuredProducts = products.filter((p) => p.featured).slice(0, 6);
+  // Display curated featured offerings, or latest offerings from backend
+  const curatedFeatured = products.filter((p) => p.featured);
+  const featuredProducts = curatedFeatured.length > 0 ? curatedFeatured.slice(0, 6) : products.slice(0, 6);
 
   const handleAdd = (item: ProductItem) => {
     addToCart({
@@ -272,7 +277,7 @@ export default function HomePage() {
             href="/shop"
             className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-[#D6B27C] hover:text-white pb-1 border-b border-[#D6B27C] transition-colors"
           >
-            <span>View Full Catalog (15 Items)</span>
+            <span>View Full Catalog ({products.length} Offerings)</span>
             <ArrowRight size={14} />
           </Link>
         </div>

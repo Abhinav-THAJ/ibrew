@@ -18,7 +18,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
-import { INITIAL_PRODUCTS, formatPrice, ProductItem } from "@/data/products";
+import { formatPrice, ProductItem } from "@/data/products";
 
 const DEFAULT_CATEGORY_IMAGES: Record<string, string> = {
   coffee: "/images/coffee/arabica.jpeg",
@@ -37,6 +37,7 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "rating">("featured");
   const [addedId, setAddedId] = useState<string | null>(null);
   const [dbProducts, setDbProducts] = useState<ProductItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const { addToCart } = useCart();
 
@@ -53,7 +54,7 @@ function ShopContent() {
         const res = await fetch("/api/products", { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             const mapped: ProductItem[] = data.map((item: any) => ({
               id: item._id,
               name: item.name,
@@ -66,6 +67,9 @@ function ShopContent() {
               rating: 5.0,
               reviewsCount: 12,
               image: item.images?.[0]?.url || DEFAULT_CATEGORY_IMAGES[item.category] || "/images/coffebags.png",
+              images: Array.isArray(item.images)
+                ? item.images.map((i: any) => (typeof i === "string" ? i : i?.url)).filter(Boolean)
+                : [],
               badge: item.badge || undefined,
               featured: item.featured || false,
               stock: item.stock || 20,
@@ -77,17 +81,15 @@ function ShopContent() {
         }
       } catch (e) {
         console.error("Failed to fetch MongoDB products:", e);
+      } finally {
+        setLoading(false);
       }
     }
     loadDbProducts();
   }, []);
 
-  const allProducts = useMemo(() => {
-    if (dbProducts.length > 0) {
-      return dbProducts;
-    }
-    return INITIAL_PRODUCTS;
-  }, [dbProducts]);
+  // ONLY products present in backend database are shown on the storefront
+  const allProducts = dbProducts;
 
   const [categoriesList, setCategoriesList] = useState<{ id: string; label: string; icon?: any }[]>([
     { id: "all", label: "All Offerings", icon: Sparkles },
@@ -344,7 +346,18 @@ function ShopContent() {
           )}
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="rounded-2xl border border-white/10 bg-[#1E1916] p-4 space-y-4 animate-pulse">
+                <div className="h-60 rounded-xl bg-white/5" />
+                <div className="h-4 w-2/3 rounded bg-white/5" />
+                <div className="h-3 w-1/2 rounded bg-white/5" />
+                <div className="h-8 rounded-full bg-white/5" />
+              </div>
+            ))}
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-white/20 p-16 text-center space-y-4 max-w-md mx-auto my-12">
             <p className="text-3xl">🌿</p>
             <h3 className="text-xl font-serif font-bold text-white">
