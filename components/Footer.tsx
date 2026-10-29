@@ -1,252 +1,211 @@
-
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Mail, Smartphone, ArrowRight } from "lucide-react";
-
-const shopLinks = [
-  { label: "Coffee Powder", href: "/shop/coffee-powder" },
-  { label: "Spices", href: "/shop/spices" },
-  { label: "Imported Perfumes", href: "/shop/imported-perfumes" },
-  { label: "Imported Beds", href: "/shop/imported-beds" },
-];
-
-const informationLinks = [
-  { label: "About Our Store", href: "/about" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "FAQs", href: "/faqs" },
-];
-
-const policyLinks = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Terms & Conditions", href: "/terms-and-conditions" },
-  { label: "Shipping & Returns", href: "/shipping-returns" },
-];
-
-const socialLinks = [
-  { label: "Facebook", href: "https://www.facebook.com/", symbol: "f" },
-  { label: "Instagram", href: "https://www.instagram.com/", symbol: "◎" },
-  { label: "YouTube", href: "https://www.youtube.com/", symbol: "▶" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/", symbol: "in" },
-  { label: "X", href: "https://x.com/", symbol: "𝕏" },
-  { label: "Pinterest", href: "https://www.pinterest.com/", symbol: "p" },
-];
-
-function FooterLinks({
-  title,
-  links,
-}: {
-  title: string;
-  links: { label: string; href: string }[];
-}) {
-  return (
-    <div>
-      <h3 className="mb-6 text-base font-bold uppercase tracking-wide sm:text-lg">
-        {title}
-      </h3>
-
-      <ul className="space-y-4">
-        {links.map((link) => (
-          <li key={link.label}>
-            <a
-              href={link.href}
-              className="text-sm text-[#fff8ef]/90 transition-colors hover:text-white hover:underline sm:text-base"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+import Link from "next/link";
+import Image from "next/image";
+import { Sparkles } from "lucide-react";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
-  function handleSubscribe(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!email.trim()) {
-      setMessage("Please enter your email address.");
-      return;
-    }
-
-    // Connect your newsletter API to save subscribers.
-    setMessage(
-      "Thank you for your interest in Imaan's Store! Newsletter signup needs to be connected."
-    );
+  function handleSubscribe(e: FormEvent) {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setSubscribed(true);
     setEmail("");
   }
 
   return (
-    <footer className="bg-[#000000] text-[#fffaf3]">
-      <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10">
-          {/* Store information and newsletter */}
-          <div className="sm:col-span-2 lg:col-span-5">
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Join Imaan&apos;s Community
-            </h2>
-
-            <p className="mt-3 max-w-md text-sm leading-6 text-[#fff8ef]/85">
-              Discover rich coffee flavours, aromatic spices, exquisite
-              imported perfumes, and comfortable imported beds. Subscribe to
-              hear about new arrivals, special offers, and more.
-            </p>
-
-            {/* Newsletter */}
-            <form
-              onSubmit={handleSubscribe}
-              className="mt-5 flex w-full max-w-[440px] items-stretch border border-[#e7d5c2]/80"
-            >
-              <label htmlFor="footer-email" className="sr-only">
-                Enter your email address
-              </label>
-
-              <input
-                id="footer-email"
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="Enter your email address"
-                className="min-w-0 flex-1 bg-transparent px-3 py-4 text-sm text-white outline-none placeholder:text-[#fff8ef]/80 focus:bg-white/5 sm:px-4"
-              />
-
-              <button
-                type="submit"
-                className="flex shrink-0 items-center gap-2 px-3 text-xs font-semibold transition-colors hover:bg-white/10 sm:px-5 sm:text-sm"
-              >
-                SUBSCRIBE
-                <ArrowRight size={16} className="hidden sm:block" />
-              </button>
-            </form>
-
-            {message && (
-              <p
-                role="status"
-                aria-live="polite"
-                className="mt-3 max-w-md text-sm text-white"
-              >
-                {message}
-              </p>
-            )}
-
-            {/* Social media */}
-            <div className="mt-10">
-              <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                Follow us on
-              </h3>
-
-              <div className="flex flex-wrap items-center gap-5">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="flex h-7 min-w-5 items-center justify-center text-lg font-bold text-[#fffaf3] transition-transform hover:-translate-y-1 hover:text-[#e9d2a8]"
-                  >
-                    {social.symbol}
-                  </a>
-                ))}
+    <footer className="bg-[#171311] text-[#FAF7F2] border-t border-[#29221D] mt-20">
+      
+      {/* Upper Brand Highlights */}
+      <div className="border-b border-[#29221D] py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">☕</span>
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">Estate Sourced</h4>
+                <p className="text-[11px] text-[#C4B7A7] mt-0.5">High-altitude shade grown Arabica</p>
               </div>
             </div>
-
-            {/* Contact */}
-            <div className="mt-10">
-              <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                Contact Us
-              </h3>
-
-              <div className="flex flex-col gap-4 text-sm sm:text-base">
-                <p className="flex items-center gap-3">
-                  <Smartphone size={20} className="shrink-0" />
-                  <span>Add your store phone number</span>
-                </p>
-
-                <p className="flex items-center gap-3 break-all">
-                  <Mail size={20} className="shrink-0" />
-                  <span>Add your store email address</span>
-                </p>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🌿</span>
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">Pure &amp; Unadulterated</h4>
+                <p className="text-[11px] text-[#C4B7A7] mt-0.5">Sun-dried 8mm+ emerald spices</p>
               </div>
             </div>
-
-            {/* Product highlights */}
-            <div className="mt-10">
-              <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                Explore Our Collection
-              </h3>
-
-              <p className="max-w-md text-sm leading-6 text-[#fff8ef]/85">
-                From your favourite cup of coffee to distinctive fragrances
-                and everyday essentials, find something special at
-                Imaan&apos;s Store.
-              </p>
-
-              <a
-                href="/shop"
-                className="mt-5 inline-flex items-center gap-2 border border-[#e7d5c2]/80 px-5 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
-              >
-                EXPLORE OUR STORE
-                <ArrowRight size={16} />
-              </a>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">✨</span>
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">Artisanal Distillation</h4>
+                <p className="text-[11px] text-[#C4B7A7] mt-0.5">Aged wild oud &amp; traditional attars</p>
+              </div>
             </div>
-          </div>
-
-          {/* Navigation columns */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:col-span-2 sm:grid-cols-3 lg:col-span-7 lg:gap-x-8">
-            <FooterLinks title="Shop" links={shopLinks} />
-
-            <FooterLinks title="Information" links={informationLinks} />
-
-            <div className="col-span-2 sm:col-span-1">
-              <FooterLinks title="Policies" links={policyLinks} />
-
-              <div className="mt-10">
-                <h3 className="mb-6 text-base font-bold uppercase tracking-wide sm:text-lg">
-                  Customer Care
-                </h3>
-
-                <a
-                  href="/contact"
-                  className="text-sm text-[#fff8ef]/90 transition-colors hover:text-white hover:underline sm:text-base"
-                >
-                  Get in Touch
-                </a>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">📦</span>
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">Direct Concierge</h4>
+                <p className="text-[11px] text-[#C4B7A7] mt-0.5">Complimentary shipping over ₹999</p>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Brand description */}
-        <div className="mt-12 border-t border-white/20 pt-7 sm:mt-14">
-          <p className="text-xs font-semibold leading-5 sm:text-sm">
-            Imaan&apos;s Store — Quality for Every Lifestyle
-          </p>
-
-          <p className="mt-2 max-w-6xl text-xs leading-5 text-[#fff8ef]/85 sm:text-sm">
-            Imaan&apos;s Store brings together coffee powder, flavourful
-            spices, imported perfumes, and imported beds in one convenient
-            destination. Explore a collection that combines everyday
-            essentials with distinctive finds for your home and lifestyle.
-          </p>
-
-          {/* Copyright */}
-          <div className="mt-6 flex flex-col gap-3 border-t border-white/20 pt-5 text-xs text-[#fff8ef]/75 sm:flex-row sm:items-center sm:justify-between">
-            <p>
-© 2026 Imaan&apos;s Store. All rights reserved.              reserved.
+      {/* Main Footer Content */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+          
+          {/* Brand Column */}
+          <div className="md:col-span-5 space-y-6">
+            <Link href="/" className="inline-block">
+              <Image
+                src="/images/logo-ibrew.png"
+                alt="ibrew"
+                width={150}
+                height={45}
+                className="h-10 w-auto object-contain brightness-0 invert"
+              />
+            </Link>
+            <p className="text-xs leading-relaxed text-[#C4B7A7] max-w-sm">
+              Dedicated to the honest pursuit of slow living. We curate micro-lot estate coffees, export-grade Malabar spices, artisanal perfumery oils, and European sleep systems for discerning homes.
             </p>
 
-            <a
-              href="/privacy-policy"
-              className="w-fit transition-colors hover:text-white hover:underline"
-            >
-              Privacy Policy
-            </a>
+            {/* Newsletter */}
+            <div className="pt-2">
+              <h4 className="text-xs font-semibold tracking-wider uppercase text-[#FAF7F2] mb-2.5">
+                The ibrew Journal &amp; Private Reserve
+              </h4>
+              <p className="text-[11px] text-[#C4B7A7] mb-3">
+                Receive private release alerts for seasonal roasts, wild harvests, and member tastings.
+              </p>
+              {subscribed ? (
+                <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#29221D] text-[#D6B27C] text-xs font-medium">
+                  <Sparkles size={14} /> You are on the private reserve list.
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex max-w-md gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    required
+                    className="flex-1 rounded-full bg-[#241E1A] border border-[#3A3029] px-4 py-2.5 text-xs text-[#FAF7F2] placeholder-[#8A7D71] focus:outline-none focus:border-[#D6B27C]"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#171311] px-5 py-2.5 text-xs font-bold tracking-wider uppercase transition-colors"
+                  >
+                    Join
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="md:col-span-2 md:col-start-7 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">
+              The 5 Pages
+            </h4>
+            <ul className="space-y-2.5 text-xs text-[#C4B7A7]">
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  1. Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop" className="hover:text-white transition-colors">
+                  2. Shop All Offerings
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-white transition-colors">
+                  3. Brand Story &amp; Heritage
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  4. Concierge &amp; Inquiries
+                </Link>
+              </li>
+              <li>
+                <Link href="/cart" className="hover:text-white transition-colors">
+                  5. Bag &amp; Checkout
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Offerings Categories */}
+          <div className="md:col-span-2 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">
+              Offerings
+            </h4>
+            <ul className="space-y-2.5 text-xs text-[#C4B7A7]">
+              <li>
+                <Link href="/shop?category=coffee" className="hover:text-white transition-colors">
+                  Estate Coffee
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?category=spices" className="hover:text-white transition-colors">
+                  Whole &amp; Ground Spices
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?category=perfumeoil" className="hover:text-white transition-colors">
+                  Dehn Al Oud &amp; Attars
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?category=importedbed" className="hover:text-white transition-colors">
+                  Luxury Bedding Systems
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  Bulk &amp; Cafe Wholesale
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Concierge & Admin */}
+          <div className="md:col-span-2 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#FAF7F2]">
+              Concierge
+            </h4>
+            <ul className="space-y-2.5 text-xs text-[#C4B7A7]">
+              <li>Mon – Sat: 9:00 AM – 7:00 PM</li>
+              <li className="text-[#FAF7F2] font-semibold">+91 99950 67188</li>
+              <li>concierge@ibrew.luxury</li>
+              <li className="pt-2">
+                <Link
+                  href="/admin"
+                  className="inline-block text-[#D6B27C] hover:underline"
+                >
+                  Admin Portal Login →
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-[#29221D] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#8A7D71]">
+          <p>© 2026 ibrew Luxury Goods Pvt Ltd. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <span>Crafted with patience &amp; provenance</span>
+            <span>•</span>
+            <Link href="/about" className="hover:text-[#FAF7F2] transition-colors">
+              Our Ethos
+            </Link>
           </div>
         </div>
       </div>

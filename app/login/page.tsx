@@ -80,7 +80,7 @@ export default function LoginPage() {
         <p
           className={`${display.className} absolute bottom-10 left-10 hidden max-w-sm text-3xl leading-snug text-white md:block`}
         >
-          Coffee, spices, scents and sleep, brought home from around the world.
+          Coffee, spices, fragances and sleep, brought home from around the world.
         </p>
       </div>
 

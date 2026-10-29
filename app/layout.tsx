@@ -1,26 +1,31 @@
-
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
+import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/CartContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
   subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Imaan's Store",
+  title: "ibrew | Artisanal Coffee, Pure Spices & Luxury Living",
   description:
-    "Shop coffee powder, spices, imported perfumes, and imported beds at Imaan's Store.",
+    "Curators of micro-lot estate coffees, wild-harvested Malabar spices, traditional oud attars, and luxury European bedding.",
+  icons: {
+    icon: "/images/logo-ibrew.png",
+  },
 };
 
 export default function RootLayout({
@@ -31,14 +36,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${playfair.variable} ${plusJakarta.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col bg-[#FAF7F2] text-[#1D1815] font-sans selection:bg-[#E8DCCF] selection:text-[#1D1815]">
         <CartProvider>
-          <Header />
-
+          <Suspense fallback={<div className="h-18 bg-[#FAF7F2] border-b border-[#1D1815]/8" />}>
+            <Header />
+          </Suspense>
           <main className="flex-1">{children}</main>
-
           <Footer />
         </CartProvider>
       </body>

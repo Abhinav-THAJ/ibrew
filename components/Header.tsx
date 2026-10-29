@@ -1,43 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import { usePathname } from "next/navigation";
 import {
-  // Heart,
-  Menu,
   ShoppingBag,
-  User,
+  Search,
+  Menu,
   X,
   Plus,
   Minus,
   Trash2,
   ArrowRight,
-  ShoppingCart,
+  Sparkles,
+  Lock,
 } from "lucide-react";
+
 import { useCart } from "./CartContext";
+import { useModalBehavior } from "./useModalBehavior";
 
-const NAV_ITEMS = [
-  { label: "Coffee", href: "/coffee" },
-  { label: "Spices", href: "/spices" },
-  { label: "Perfumes", href: "/perfumeoil" },
-  { label: "Imported Beds", href: "/importedbed" },
-];
-
-const formatPrice = (price: number) =>
-  `₹${price.toLocaleString("en-IN")}`;
+const formatPrice = (price: number) => `₹${price.toLocaleString("en-IN")}`;
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const {
-    cartItems,
-    cartCount,
-    removeFromCart,
-    updateQuantity,
-  } = useCart();
+  const { cartItems, cartCount, removeFromCart, updateQuantity } = useCart();
 
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -45,336 +36,355 @@ export default function Header() {
   );
 
   useEffect(() => {
-    if (!cartOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setCartOpen(false);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
     };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    window.addEventListener("keydown", handleKeyDown);
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setCartOpen(false);
+  }, [pathname]);
 
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [cartOpen]);
+  useModalBehavior(cartOpen, () => setCartOpen(false));
+  useModalBehavior(mobileMenuOpen, () => setMobileMenuOpen(false));
 
-  const changeQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-      return;
-    }
-
-    updateQuantity(id, quantity);
-  };
-
-  const actions = [
-    { label: "Login", href: "/login", Icon: User },
-    // { label: "Wishlist", href: "/wishlist", Icon: Heart },
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Shop", href: "/shop" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
   ];
 
   return (
     <>
-      {/* Main header */}
-      <header className="sticky top-0 z-50 border-0 bg-white text-black shadow-none">
-        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:h-[72px] sm:px-6 lg:px-8">
-         
-          
-{/* Logo */}
-<Link
-  href="/"
-  onClick={() => setMenuOpen(false)}
-  className="shrink-0 pt-4 transition-opacity hover:opacity-80"
->
-  <Image
-    src="/images/logo.png?v=2"
-    alt="Imaan's Store"
-    width={300}
-    height={150}
-    
-    priority
-    unoptimized
-    className="h-auto w-40 object-contain sm:w-48 md:w-56 lg:w-84"
-  />
-</Link>
+      {/* 1. ANNOUNCEMENT BAR */}
+      <div className="bg-[#1D1815] text-[#E8DCCF] text-[11px] sm:text-xs font-medium tracking-widest uppercase py-2 px-4 text-center border-b border-[#2C2420]">
+        <div className="mx-auto max-w-7xl flex items-center justify-center gap-2 sm:gap-4">
+          <span className="hidden sm:inline">☕</span>
+          <span>Complimentary Pan-India Delivery on Orders Above ₹999</span>
+          <span className="opacity-40">•</span>
+          <span className="text-[#D6B27C] font-semibold">Small-Batch Roasted Weekly</span>
+        </div>
+      </div>
 
-
-          {/* Desktop navigation */}
-          <ul className="hidden items-center gap-5 md:flex lg:gap-8">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="whitespace-nowrap text-sm font-medium text-black transition-colors hover:text-neutral-500"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* Header actions */}
-          <div className="flex shrink-0 items-center gap-3 sm:gap-5">
-            {actions.map(({ label, href, Icon }) => (
-              <Link
-                key={label}
-                href={href}
-                aria-label={label}
-                className="hidden text-black transition-colors hover:text-neutral-500 sm:flex"
-              >
-                <Icon size={21} strokeWidth={1.7} />
-              </Link>
-            ))}
-
-            {/* Cart button */}
-            <button
-              type="button"
-              onClick={() => {
-                setCartOpen(true);
-                setMenuOpen(false);
-              }}
-              aria-label={`Open cart, ${cartCount} items`}
-              className="relative flex items-center justify-center text-black transition-colors hover:text-neutral-500"
-            >
-              <ShoppingBag size={22} strokeWidth={1.7} />
-
-              {cartCount > 0 && (
-                <span className="absolute -right-2.5 -top-2 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-black px-1 text-[10px] font-semibold text-white">
-                  {cartCount > 99 ? "99+" : cartCount}
-                </span>
-              )}
-            </button>
-
-            {/* Mobile menu button */}
-            <button
-              type="button"
-              onClick={() => setMenuOpen((open) => !open)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              className="ml-1 text-black transition-colors hover:text-neutral-500 md:hidden"
-            >
-              {menuOpen ? <X size={23} /> : <Menu size={23} />}
-            </button>
-          </div>
-        </nav>
-
-        {/* Mobile navigation */}
-        {menuOpen && (
-          <div className="border-t border-neutral-200 bg-white px-4 py-3 shadow-md md:hidden">
-            <ul className="space-y-1">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="block rounded-lg px-3 py-3 text-sm font-medium text-black transition-colors hover:bg-neutral-100"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-
-              <li>
-                <Link
-                  href="/login"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-black transition hover:bg-neutral-100"
-                >
-                  <User size={18} />
-                  Login
-                </Link>
-              </li>
-
-              
-            </ul>
-          </div>
-        )}
-      </header>
-
-      {/* Cart drawer overlay */}
-      {cartOpen && (
-        <div className="fixed inset-0 z-[100]">
-          <button
-            type="button"
-            aria-label="Close cart"
-            onClick={() => setCartOpen(false)}
-            className="absolute inset-0 h-full w-full cursor-default bg-black/60"
-          />
-
-          {/* Cart drawer */}
-          <aside
-            role="dialog"
-            aria-modal="true"
-            aria-label="Shopping cart"
-            className="absolute right-0 top-0 flex h-[100dvh] w-full max-w-md flex-col bg-white text-black shadow-2xl sm:w-[440px]"
-          >
-            {/* Drawer header */}
-            <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4 sm:px-6">
-              <div>
-                <h2 className="text-lg font-semibold text-black">
-                  Your Cart
-                </h2>
-
-                <p className="mt-0.5 text-xs text-neutral-500">
-                  {cartCount} {cartCount === 1 ? "item" : "items"} in your bag
-                </p>
-              </div>
-
+      {/* 2. MAIN NAVIGATION */}
+      <header
+        className={`sticky top-0 z-40 transition-all duration-300 ${
+          isScrolled
+            ? "bg-[#FAF7F2]/95 backdrop-blur-md shadow-sm border-b border-[#1D1815]/10"
+            : "bg-[#FAF7F2] border-b border-[#1D1815]/8"
+        }`}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-18 items-center justify-between gap-6">
+            
+            {/* Mobile Hamburger Button */}
+            <div className="flex items-center lg:hidden">
               <button
                 type="button"
-                onClick={() => setCartOpen(false)}
-                aria-label="Close cart"
-                className="rounded-full p-2 text-black transition hover:bg-neutral-100"
+                onClick={() => setMobileMenuOpen(true)}
+                className="p-2 -ml-2 text-[#1D1815] hover:opacity-70 transition-opacity"
+                aria-label="Open navigation menu"
               >
-                <X size={22} />
+                <Menu size={22} strokeWidth={1.75} />
               </button>
             </div>
 
-            {/* Cart items */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 sm:px-6">
-              {cartItems.length === 0 ? (
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-neutral-100">
-                    <ShoppingCart
-                      size={34}
-                      strokeWidth={1.3}
-                      className="text-neutral-600"
-                    />
-                  </div>
+            {/* Brand Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="group flex items-center gap-3">
+                <Image
+                  src="/images/logo-ibrew.png"
+                  alt="ibrew"
+                  width={140}
+                  height={42}
+                  priority
+                  className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                />
+              </Link>
+            </div>
 
-                  <h3 className="mt-5 text-lg font-semibold text-black">
-                    Your cart is empty
-                  </h3>
-
-                  <p className="mt-2 max-w-[250px] text-sm leading-6 text-neutral-500">
-                    Looks like you haven&apos;t added any products yet.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() => setCartOpen(false)}
-                    className="mt-6 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition hover:bg-neutral-800"
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-9">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={`relative text-[13.5px] tracking-wide uppercase font-medium transition-colors duration-200 py-1 ${
+                      isActive
+                        ? "text-[#1D1815] font-semibold"
+                        : "text-[#1D1815]/75 hover:text-[#1D1815]"
+                    }`}
                   >
-                    Continue Shopping
-                  </button>
-                </div>
+                    {link.label}
+                    {isActive && (
+                      <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#6E442B] rounded-full" />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Right Action Controls */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              
+              {/* Quick Search */}
+              <Link
+                href="/shop"
+                className="p-2 text-[#1D1815]/80 hover:text-[#1D1815] hover:bg-[#1D1815]/5 rounded-full transition-colors"
+                title="Search offerings"
+              >
+                <Search size={19} strokeWidth={1.8} />
+              </Link>
+
+              {/* Admin Dashboard shortcut */}
+              <Link
+                href="/admin"
+                className="hidden md:inline-flex items-center gap-1.5 text-xs text-[#1D1815]/70 hover:text-[#1D1815] px-2.5 py-1 rounded-full border border-[#1D1815]/15 hover:border-[#1D1815]/40 transition-colors"
+                title="Admin Studio"
+              >
+                <Lock size={12} />
+                <span>Admin</span>
+              </Link>
+
+              {/* Cart Drawer Trigger */}
+              <button
+                type="button"
+                onClick={() => setCartOpen(true)}
+                className="relative flex items-center gap-2 bg-[#1D1815] hover:bg-[#322923] text-[#FAF7F2] px-3.5 py-2 sm:px-4 sm:py-2.2 rounded-full transition-all active:scale-95 shadow-sm"
+                aria-label={`Open Cart (${cartCount} items)`}
+              >
+                <ShoppingBag size={17} strokeWidth={2} />
+                <span className="text-xs font-semibold tracking-wider uppercase hidden sm:inline">
+                  Bag
+                </span>
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#E8DCCF] text-[#1D1815] text-[11px] font-bold">
+                  {cartCount}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* 3. MOBILE MENU DRAWER */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="fixed inset-0 bg-[#1D1815]/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-[#FAF7F2] p-6 shadow-2xl flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-6 border-b border-[#1D1815]/10">
+                <Image
+                  src="/images/logo-ibrew.png"
+                  alt="ibrew"
+                  width={120}
+                  height={36}
+                  className="h-8 w-auto object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 text-[#1D1815]/70 hover:text-[#1D1815]"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <nav className="mt-8 flex flex-col gap-5">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={`text-xl font-medium tracking-tight transition-colors ${
+                      pathname === link.href
+                        ? "text-[#6E442B] font-semibold"
+                        : "text-[#1D1815] hover:text-[#6E442B]"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Link
+                  href="/cart"
+                  className="text-xl font-medium text-[#1D1815] hover:text-[#6E442B] flex items-center justify-between pt-2 border-t border-[#1D1815]/10"
+                >
+                  <span>Shopping Bag</span>
+                  <span className="text-sm bg-[#1D1815] text-white px-2 py-0.5 rounded-full font-bold">
+                    {cartCount}
+                  </span>
+                </Link>
+              </nav>
+            </div>
+
+            <div className="pt-6 border-t border-[#1D1815]/10 text-xs text-[#1D1815]/60 space-y-2">
+              <p>Direct Inquiries: +91 99950 67188</p>
+              <p>Email: concierge@ibrew.luxury</p>
+              <Link
+                href="/admin"
+                className="inline-block mt-2 text-[#6E442B] font-semibold underline underline-offset-2"
+              >
+                Go to Admin Portal
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. SLIDE-OVER CART DRAWER */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-50">
+          <div
+            className="fixed inset-0 bg-[#1D1815]/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setCartOpen(false)}
+          />
+          <aside className="fixed inset-y-0 right-0 w-full max-w-md bg-[#FAF7F2] shadow-2xl flex flex-col">
+            
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#1D1815]/10">
+              <div className="flex items-center gap-2">
+                <ShoppingBag size={19} className="text-[#6E442B]" />
+                <h2 className="text-base font-bold uppercase tracking-wider text-[#1D1815]">
+                  Your Bag ({cartCount})
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCartOpen(false)}
+                className="p-1.5 text-[#1D1815]/60 hover:text-[#1D1815] hover:bg-[#1D1815]/5 rounded-full transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="bg-[#EFE8DF] px-6 py-3 border-b border-[#1D1815]/8 text-xs text-[#1D1815]">
+              {subtotal >= 999 ? (
+                <p className="flex items-center gap-1.5 text-[#355E3B] font-semibold">
+                  <Sparkles size={14} /> You unlocked complimentary standard delivery!
+                </p>
               ) : (
-                <div className="space-y-5">
-                  {cartItems.map((item) => (
-                    <article
-                      key={item.id}
-                      className="flex gap-4 border-b border-neutral-200 pb-5"
-                    >
-                      {/* Product image */}
-                      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-neutral-100 sm:h-28 sm:w-28">
-                        {item.image ? (
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center">
-                            <ShoppingBag className="text-neutral-400" />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Product details */}
-                      <div className="flex min-w-0 flex-1 flex-col">
-                        <div className="flex items-start justify-between gap-2">
-                          <h3 className="line-clamp-2 text-sm font-medium leading-5 text-black">
-                            {item.name}
-                          </h3>
-
-                          <button
-                            type="button"
-                            onClick={() => removeFromCart(item.id)}
-                            aria-label={`Remove ${item.name}`}
-                            className="shrink-0 rounded p-1 text-neutral-500 transition hover:text-black"
-                          >
-                            <Trash2 size={17} />
-                          </button>
-                        </div>
-
-                        <p className="mt-2 text-sm font-semibold text-black">
-                          {formatPrice(item.price)}
-                        </p>
-
-                        {/* Quantity and line total */}
-                        <div className="mt-auto flex items-center justify-between gap-3 pt-3">
-                          <div className="flex items-center rounded-full border border-neutral-300 text-black">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                changeQuantity(item.id, item.quantity - 1)
-                              }
-                              aria-label={`Decrease quantity of ${item.name}`}
-                              className="rounded-l-full p-2 transition hover:bg-neutral-100"
-                            >
-                              <Minus size={14} />
-                            </button>
-
-                            <span className="min-w-8 text-center text-sm tabular-nums">
-                              {item.quantity}
-                            </span>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                changeQuantity(item.id, item.quantity + 1)
-                              }
-                              aria-label={`Increase quantity of ${item.name}`}
-                              className="rounded-r-full p-2 transition hover:bg-neutral-100"
-                            >
-                              <Plus size={14} />
-                            </button>
-                          </div>
-
-                          <p className="text-sm font-semibold text-black">
-                            {formatPrice(item.price * item.quantity)}
-                          </p>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                <p>
+                  Add <span className="font-bold">{formatPrice(999 - subtotal)}</span> more
+                  to unlock complimentary pan-India shipping.
+                </p>
               )}
             </div>
 
-            {/* Subtotal and checkout */}
-            {cartItems.length > 0 && (
-              <div className="border-t border-neutral-200 bg-white px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 sm:px-6">
-                <div className="flex items-center justify-between text-sm text-neutral-600">
-                  <span>Subtotal</span>
+            <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-[#1D1815]/8">
+              {cartItems.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center py-16 text-[#1D1815]/60">
+                  <div className="h-16 w-16 rounded-full bg-[#E8DCCF]/50 flex items-center justify-center mb-4 text-[#6E442B]">
+                    <ShoppingBag size={28} strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-lg font-bold text-[#1D1815] font-serif">
+                    Your bag is empty
+                  </h3>
+                  <p className="text-xs text-[#1D1815]/70 max-w-xs mt-1.5 mb-6">
+                    Discover our freshly roasted single-origins, emerald spices, and fine oud oils.
+                  </p>
+                  <Link
+                    href="/shop"
+                    onClick={() => setCartOpen(false)}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1D1815] text-[#FAF7F2] text-xs font-semibold tracking-wider uppercase transition hover:bg-[#322923]"
+                  >
+                    Browse Collection <ArrowRight size={14} />
+                  </Link>
+                </div>
+              ) : (
+                cartItems.map((item) => (
+                  <article key={item.id} className="py-4 flex gap-4 items-center">
+                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-[#E8DCCF]/40 border border-[#1D1815]/8">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-semibold text-[#1D1815] truncate">
+                        {item.name}
+                      </h4>
+                      <p className="text-xs text-[#6E442B] font-bold mt-0.5">
+                        {formatPrice(item.price)}
+                      </p>
 
-                  <span className="text-base font-semibold text-black">
+                      <div className="flex items-center justify-between mt-3">
+                        <div className="inline-flex items-center rounded-full border border-[#1D1815]/20 bg-white">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (item.quantity <= 1) {
+                                removeFromCart(item.id);
+                              } else {
+                                updateQuantity(item.id, item.quantity - 1);
+                              }
+                            }}
+                            className="p-1.5 text-[#1D1815]/70 hover:text-[#1D1815]"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <span className="w-6 text-center text-xs font-semibold">
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="p-1.5 text-[#1D1815]/70 hover:text-[#1D1815]"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-[#1D1815]/40 hover:text-red-700 transition-colors p-1"
+                          title="Remove item"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              )}
+            </div>
+
+            {cartItems.length > 0 && (
+              <div className="p-6 bg-[#FFFFFF] border-t border-[#1D1815]/10 space-y-4">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#1D1815]/70">Subtotal</span>
+                  <span className="font-bold text-base text-[#1D1815]">
                     {formatPrice(subtotal)}
                   </span>
                 </div>
-
-                <p className="mt-2 text-xs leading-5 text-neutral-500">
-                  Shipping and any applicable taxes are calculated at checkout.
+                <p className="text-[11px] text-[#1D1815]/50">
+                  Applicable taxes and express delivery calculated during checkout.
                 </p>
-
-                <Link
-                  href="/cart"
-                  onClick={() => setCartOpen(false)}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-black px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
-                >
-                  View Cart & Checkout <ArrowRight size={17} />
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={() => setCartOpen(false)}
-                  className="mt-3 w-full rounded-full border border-black px-5 py-3 text-sm font-medium text-black transition hover:bg-neutral-100"
-                >
-                  Continue Shopping
-                </button>
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <Link
+                    href="/cart"
+                    onClick={() => setCartOpen(false)}
+                    className="col-span-2 flex items-center justify-center gap-2 rounded-full bg-[#1D1815] text-[#FAF7F2] py-3.5 text-xs font-bold tracking-widest uppercase transition hover:bg-[#322923] shadow-md"
+                  >
+                    View Bag &amp; Checkout <ArrowRight size={15} />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setCartOpen(false)}
+                    className="col-span-2 text-center text-xs font-semibold text-[#1D1815]/70 hover:text-[#1D1815] py-1"
+                  >
+                    Continue Browsing
+                  </button>
+                </div>
               </div>
             )}
           </aside>
