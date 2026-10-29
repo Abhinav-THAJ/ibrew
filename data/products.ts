@@ -3,13 +3,14 @@ export type ProductItem = {
   name: string;
   tagline: string;
   description: string;
-  category: "coffee" | "spices" | "perfumeoil" | "importedbed";
+  category: string;
   subCategory: string;
   price: number;
   mrp: number;
   rating: number;
   reviewsCount: number;
   image: string;
+  images?: string[];
   badge?: string;
   featured?: boolean;
   stock: number;

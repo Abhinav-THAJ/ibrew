@@ -1,9 +1,8 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { CATEGORIES, SUBCATEGORIES } from "@/lib/constants";
-import type { Category } from "@/lib/constants";
 
 export { CATEGORIES, SUBCATEGORIES };
-export type { Category };
+export type Category = string;
 
 export interface IImage {
   url: string;
@@ -15,7 +14,7 @@ export interface IProduct {
   description: string;
   price: number;
   mrp: number;
-  category: Category;
+  category: string;
   subCategory: string;
   badge: string;
   images: IImage[];
@@ -32,7 +31,7 @@ const ProductSchema = new Schema<IProductDoc>(
     description: { type: String, default: "" },
     price: { type: Number, required: true },
     mrp: { type: Number, default: 0 },
-    category: { type: String, required: true, enum: CATEGORIES },
+    category: { type: String, required: true, trim: true, lowercase: true },
     subCategory: { type: String, default: "" },
     badge: { type: String, default: "" },
     images: [{ url: String, public_id: String }],

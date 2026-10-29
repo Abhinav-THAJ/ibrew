@@ -1,8 +1,8 @@
-export type Category = "coffee" | "spices" | "importedbed" | "perfumeoil";
+export type Category = string;
 
 export const CATEGORIES: Category[] = ["coffee", "spices", "importedbed", "perfumeoil"];
 
-export const CATEGORY_LABELS: Record<Category, string> = {
+export const CATEGORY_LABELS: Record<string, string> = {
   coffee: "Coffee",
   spices: "Spices",
   importedbed: "Imported Beds",
@@ -10,7 +10,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
 };
 
 // Types shown in the form for each category. Fill in the other three to match your pages.
-export const SUBCATEGORIES: Record<Category, string[]> = {
+export const SUBCATEGORIES: Record<string, string[]> = {
   coffee: ["Coffee Powder", "Coffee Skincare"],
   spices: [],
   importedbed: [],

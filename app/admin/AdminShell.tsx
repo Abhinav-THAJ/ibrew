@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, type ReactNode } from "react";
 import {
   ExternalLink,
+  Layers,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -18,6 +19,7 @@ import {
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/categories", label: "Categories", icon: Layers },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/add", label: "Add product", icon: PlusSquare },
 ];
@@ -33,6 +35,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     if (href === "/admin") return pathname === "/admin";
     if (href === "/admin/products")
       return pathname.startsWith("/admin/products") || pathname.startsWith("/admin/edit");
+    if (href === "/admin/categories") return pathname.startsWith("/admin/categories");
     if (href === "/admin/orders") return pathname.startsWith("/admin/orders");
     return pathname.startsWith(href);
   };

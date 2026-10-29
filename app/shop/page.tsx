@@ -20,6 +20,13 @@ import {
 import { useCart } from "@/components/CartContext";
 import { INITIAL_PRODUCTS, formatPrice, ProductItem } from "@/data/products";
 
+const DEFAULT_CATEGORY_IMAGES: Record<string, string> = {
+  coffee: "/images/coffee/arabica.jpeg",
+  spices: "/images/spices/cardamom.avif",
+  perfumeoil: "/images/Elegant Bottle Display.png",
+  importedbed: "/images/importedbed/double-bed.jpeg",
+};
+
 function ShopContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
@@ -43,7 +50,7 @@ function ShopContent() {
   useEffect(() => {
     async function loadDbProducts() {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/products", { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -58,7 +65,7 @@ function ShopContent() {
               mrp: item.mrp || item.price,
               rating: 5.0,
               reviewsCount: 12,
-              image: item.images?.[0]?.url || "/images/coffebags.png",
+              image: item.images?.[0]?.url || DEFAULT_CATEGORY_IMAGES[item.category] || "/images/coffebags.png",
               badge: item.badge || undefined,
               featured: item.featured || false,
               stock: item.stock || 20,
@@ -82,13 +89,60 @@ function ShopContent() {
     return INITIAL_PRODUCTS;
   }, [dbProducts]);
 
-  const categories = [
+  const [categoriesList, setCategoriesList] = useState<{ id: string; label: string; icon?: any }[]>([
     { id: "all", label: "All Offerings", icon: Sparkles },
     { id: "coffee", label: "Estate Coffee", icon: Coffee },
     { id: "spices", label: "Estate Spices", icon: Leaf },
     { id: "perfumeoil", label: "Rare Fragrance Oils", icon: Flower2 },
     { id: "importedbed", label: "Luxury Living & Beds", icon: BedDouble },
-  ];
+  ]);
+
+  useEffect(() => {
+    async function loadDynamicCategories() {
+      try {
+        const res = await fetch("/api/categories", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const iconMap: Record<string, any> = {
+              coffee: Coffee,
+              spices: Leaf,
+              perfumeoil: Flower2,
+              importedbed: BedDouble,
+            };
+            const mapped = [
+              { id: "all", label: "All Offerings", icon: Sparkles },
+              ...data.map((c: any) => ({
+                id: c.slug,
+                label: c.name,
+                icon: iconMap[c.slug] || Sparkles,
+              })),
+            ];
+            setCategoriesList(mapped);
+          }
+        }
+      } catch (e) {
+        console.warn("Could not load categories:", e);
+      }
+    }
+    loadDynamicCategories();
+  }, []);
+
+  const categories = useMemo(() => {
+    const list = [...categoriesList];
+    const seen = new Set(list.map((c) => c.id));
+    allProducts.forEach((p) => {
+      if (p.category && !seen.has(p.category)) {
+        seen.add(p.category);
+        list.push({
+          id: p.category,
+          label: p.category.charAt(0).toUpperCase() + p.category.slice(1),
+          icon: Sparkles,
+        });
+      }
+    });
+    return list;
+  }, [categoriesList, allProducts]);
 
   const availableSubCategories = useMemo(() => {
     if (activeCategory === "all") return [];

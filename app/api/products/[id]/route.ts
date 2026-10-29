@@ -16,7 +16,13 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
   await connectDB();
   const product = await Product.findById(id);
   if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(product);
+  return NextResponse.json(product, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+  });
 }
 
 export async function PUT(req: NextRequest, { params }: Ctx) {

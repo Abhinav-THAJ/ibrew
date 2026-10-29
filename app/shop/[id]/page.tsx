@@ -20,6 +20,7 @@ import {
   Clock,
   Award,
   ChevronDown,
+  Edit3,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
 import {
@@ -49,21 +50,24 @@ function SingleProductContent() {
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<number | null>(0);
+  const [activeImage, setActiveImage] = useState<string>("");
   const [dbProduct, setDbProduct] = useState<ProductItem | null>(null);
   const [loading, setLoading] = useState(!staticMatch);
 
   useEffect(() => {
-    if (staticMatch) {
-      setLoading(false);
-      return;
-    }
-
     async function fetchFromApi() {
       try {
-        const res = await fetch(`/api/products/${productId}`);
+        const res = await fetch(`/api/products/${productId}`, { cache: "no-store" });
         if (res.ok) {
           const item = await res.json();
           if (item) {
+            const imgList: string[] = Array.isArray(item.images)
+              ? item.images
+                  .map((img: any) => (typeof img === "string" ? img : img?.url))
+                  .filter(Boolean)
+              : [];
+            const primary = imgList[0] || item.images?.[0]?.url || "/images/coffebags.png";
+
             setDbProduct({
               id: item._id,
               name: item.name,
@@ -75,25 +79,41 @@ function SingleProductContent() {
               mrp: item.mrp || item.price,
               rating: 5.0,
               reviewsCount: 14,
-              image: item.images?.[0]?.url || "/images/coffee-bag.png",
-              badge: "Fresh Release",
+              image: primary,
+              images: imgList,
+              badge: item.badge || undefined,
               stock: item.stock || 25,
-              weightOrSize: item.weight || item.size || "Standard",
-              origin: item.origin || "Estate Direct",
+              weightOrSize: item.subCategory || "Standard",
+              origin: "Estate Direct",
             });
+            return;
           }
         }
       } catch (err) {
-        console.error("Failed to load product by ID:", err);
+        console.error("Failed to load product by ID from API:", err);
       } finally {
         setLoading(false);
       }
     }
 
     fetchFromApi();
-  }, [productId, staticMatch]);
+  }, [productId]);
 
-  const product = staticMatch || dbProduct;
+  const product = dbProduct || staticMatch;
+
+  const allGalleryImages: string[] = useMemo(() => {
+    if (!product) return [];
+    if (product.images && product.images.length > 0) {
+      return product.images;
+    }
+    return [product.image];
+  }, [product]);
+
+  useEffect(() => {
+    if (product) {
+      setActiveImage(product.images?.[0] || product.image);
+    }
+  }, [product]);
 
   // 2. Related items from the same category
   const relatedProducts = useMemo(() => {
@@ -219,12 +239,22 @@ function SingleProductContent() {
             </span>
           </div>
 
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D6B27C] hover:text-white transition-colors"
-          >
-            <ArrowLeft size={14} /> Back to Catalog
-          </Link>
+          <div className="flex items-center gap-2.5">
+            <Link
+              href={`/admin/edit/${product.id}`}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#D6B27C]/50 bg-[#241E1A] hover:bg-[#D6B27C] text-[#D6B27C] hover:text-[#120F0D] px-3.5 py-1.5 text-xs font-semibold tracking-wider transition-all duration-200 shadow-md"
+              title="Edit product details, photos, price, and stock in Admin Panel"
+            >
+              <Edit3 size={12} />
+              <span>Edit Offering (Admin)</span>
+            </Link>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft size={14} /> Back to Catalog
+            </Link>
+          </div>
         </nav>
 
         {/* MAIN PRODUCT SHOWCASE (2 COLUMNS) */}
@@ -234,7 +264,7 @@ function SingleProductContent() {
           <div className="lg:col-span-6 space-y-6">
             <div className="relative h-[420px] sm:h-[520px] w-full rounded-3xl overflow-hidden bg-[#1E1916] border border-white/10 shadow-2xl group">
               <Image
-                src={product.image}
+                src={activeImage || product.image}
                 alt={product.name}
                 fill
                 priority
@@ -262,6 +292,42 @@ function SingleProductContent() {
                 </div>
               )}
             </div>
+
+            {/* PHOTO GALLERY THUMBNAILS (SPACE 2 IMAGES) */}
+            {allGalleryImages.length > 1 && (
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-[#A89A8C]">
+                  <span className="font-bold uppercase tracking-wider text-[#D6B27C]">
+                    Photo Gallery ({allGalleryImages.length} Views)
+                  </span>
+                  <span className="text-[10px]">Click thumbnail to inspect</span>
+                </div>
+                <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+                  {allGalleryImages.map((imgUrl, idx) => {
+                    const isSelected = (activeImage || product.image) === imgUrl;
+                    return (
+                      <button
+                        key={imgUrl + idx}
+                        type="button"
+                        onClick={() => setActiveImage(imgUrl)}
+                        className={`group relative h-20 w-20 shrink-0 rounded-2xl overflow-hidden border-2 transition-all ${
+                          isSelected
+                            ? "border-[#D6B27C] ring-2 ring-[#D6B27C]/40 scale-105 shadow-xl"
+                            : "border-white/15 opacity-70 hover:opacity-100 hover:border-white/40"
+                        }`}
+                      >
+                        <img src={imgUrl} alt={`Angle ${idx + 1}`} className="h-full w-full object-cover" />
+                        {idx === 0 && (
+                          <span className="absolute bottom-1 left-1 bg-[#120F0D]/90 text-[8px] font-bold uppercase tracking-wider text-[#D6B27C] px-1 rounded">
+                            Cover
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Provenance Micro-Pillars */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">

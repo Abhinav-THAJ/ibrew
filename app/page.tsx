@@ -71,7 +71,7 @@ export default function HomePage() {
     setTimeout(() => setAddedId(null), 1800);
   };
 
-  const pillars = [
+  const [pillars, setPillars] = useState([
     {
       title: "Estate Coffee",
       tagline: "Single-origin shade grown roasts",
@@ -108,7 +108,39 @@ export default function HomePage() {
       icon: BedDouble,
       badge: "European Craft",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    async function loadDynamicCategories() {
+      try {
+        const res = await fetch("/api/categories", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const iconMap: Record<string, any> = {
+              coffee: Coffee,
+              spices: Leaf,
+              perfumeoil: Flower2,
+              importedbed: BedDouble,
+            };
+            const mapped = data.map((cat: any) => ({
+              title: cat.name,
+              tagline: cat.subCategories?.[0] || "Artisanal Reserve",
+              desc: cat.description || `Directly sourced ${cat.name} from generational estate partnerships.`,
+              image: cat.image || "/images/coffee/arabica.jpeg",
+              href: `/shop?category=${cat.slug}`,
+              icon: iconMap[cat.slug] || Sparkles,
+              badge: cat.featured ? "Estate Harvest" : "Curated",
+            }));
+            setPillars(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic categories for homepage:", err);
+      }
+    }
+    loadDynamicCategories();
+  }, []);
 
   return (
     <div className="space-y-24 sm:space-y-32 pb-16 bg-[#120F0D] text-[#FAF7F2]">
@@ -166,7 +198,7 @@ export default function HomePage() {
             Curated Domains
           </p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white">
-            Four Pillars of Craft
+            Curated Craft Domains
           </h2>
           <p className="text-sm text-[#C4B7A7] leading-relaxed">
             Every offering is sourced through generational estate relationships, free from industrial shortcuts.
