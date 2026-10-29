@@ -1,14 +1,15 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product, { ProductType } from "@/models/product";
 import Order from "@/models/order";
 import { CATEGORIES, CATEGORY_LABELS } from "@/lib/constants";
 
-
 const money = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 async function DashboardData() {
+  await connection();
   await connectDB();
   const products: ProductType[] = JSON.parse(
     JSON.stringify(await Product.find().sort({ createdAt: -1 }).lean())

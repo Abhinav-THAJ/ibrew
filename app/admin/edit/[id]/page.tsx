@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product, { ProductType } from "@/models/product";
 import ProductForm from "../../ProductForm";
 
 async function EditForm({ params }: { params: Promise<{ id: string }> }) {
+  await connection();
   const { id } = await params;
   await connectDB();
   const found = await Product.findById(id).lean();

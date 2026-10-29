@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product, { ProductType } from "@/models/product";
 import ProductsTable from "./ProductsTable";
 
-
 async function ProductsData() {
+  await connection();
   await connectDB();
   const products: ProductType[] = JSON.parse(
     JSON.stringify(await Product.find().sort({ createdAt: -1 }).lean())

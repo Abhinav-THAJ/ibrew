@@ -1,10 +1,11 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Order, { OrderType } from "@/models/order";
 import OrdersClient from "./OrdersClient";
 
-
 async function OrdersData() {
+  await connection();
   await connectDB();
   const orders: OrderType[] = JSON.parse(
     JSON.stringify(await Order.find().sort({ createdAt: -1 }).lean())
