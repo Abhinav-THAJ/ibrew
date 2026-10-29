@@ -40,7 +40,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-[#120F0D] text-[#FAF7F2] font-sans selection:bg-[#D6B27C] selection:text-[#120F0D]">
         <CartProvider>
-          <Suspense fallback={<div className="h-18 bg-[#171311] border-b border-[#29221D]" />}>
+          <Suspense fallback={<div className="h-20 sm:h-22 bg-[#171311] border-b border-[#29221D]" />}>
             <Header />
           </Suspense>
           <main className="flex-1 bg-[#120F0D]">{children}</main>

@@ -61,13 +61,13 @@ export default function Footer() {
           
           {/* Brand Column */}
           <div className="md:col-span-5 space-y-6">
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-block py-1">
               <Image
                 src="/images/logo-ibrew.png"
-                alt="ibrew"
-                width={150}
-                height={45}
-                className="h-10 w-auto object-contain brightness-0 invert"
+                alt="ibrew Luxury Roasters"
+                width={220}
+                height={70}
+                className="h-12 sm:h-14 w-auto object-contain brightness-0 invert transition-transform duration-300 hover:scale-105"
               />
             </Link>
             <p className="text-xs leading-relaxed text-[#C4B7A7] max-w-sm">

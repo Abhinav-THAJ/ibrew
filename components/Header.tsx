@@ -79,51 +79,51 @@ export default function Header() {
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-18 items-center justify-between gap-6">
+          <div className="flex h-20 sm:h-22 items-center justify-between gap-6">
             
             {/* Mobile Hamburger Button */}
             <div className="flex items-center lg:hidden">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="p-2 -ml-2 text-[#FAF7F2] hover:text-[#D6B27C] transition-colors"
+                className="p-2 -ml-2 text-white hover:text-[#D6B27C] transition-colors"
                 aria-label="Open navigation menu"
               >
-                <Menu size={22} strokeWidth={1.75} />
+                <Menu size={24} strokeWidth={2} />
               </button>
             </div>
 
-            {/* Brand Logo */}
+            {/* Brand Logo - Prominent & Artisanal */}
             <div className="flex items-center">
-              <Link href="/" className="group flex items-center gap-3">
+              <Link href="/" className="group flex items-center py-1">
                 <Image
                   src="/images/logo-ibrew.png"
-                  alt="ibrew"
-                  width={140}
-                  height={42}
+                  alt="ibrew Luxury Roasters"
+                  width={240}
+                  height={78}
                   priority
-                  className="h-9 w-auto object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="h-12 sm:h-14 lg:h-16 w-auto object-contain brightness-0 invert transition-all duration-300 group-hover:scale-105"
                 />
               </Link>
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-9">
+            <nav className="hidden lg:flex items-center gap-10">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`relative text-[13.5px] tracking-widest uppercase font-medium transition-colors duration-200 py-1 ${
+                    className={`relative text-[14px] tracking-[0.18em] uppercase transition-all duration-200 py-1.5 ${
                       isActive
-                        ? "text-[#D6B27C] font-semibold"
-                        : "text-[#E8DCCF]/80 hover:text-[#FAF7F2]"
+                        ? "text-[#D6B27C] font-bold"
+                        : "text-white font-semibold hover:text-[#D6B27C]"
                     }`}
                   >
                     {link.label}
                     {isActive && (
-                      <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#D6B27C] rounded-full" />
+                      <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#D6B27C] rounded-full shadow-[0_0_10px_rgba(214,178,124,0.8)]" />
                     )}
                   </Link>
                 );
@@ -131,24 +131,25 @@ export default function Header() {
             </nav>
 
             {/* Right Action Controls */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               
               {/* Quick Search */}
               <Link
                 href="/shop"
-                className="p-2 text-[#E8DCCF]/80 hover:text-[#D6B27C] hover:bg-white/5 rounded-full transition-colors"
+                className="p-2 text-white hover:text-[#D6B27C] hover:bg-white/10 rounded-full transition-colors"
                 title="Search offerings"
+                aria-label="Search catalog"
               >
-                <Search size={19} strokeWidth={1.8} />
+                <Search size={20} strokeWidth={2} />
               </Link>
 
               {/* Admin Dashboard shortcut */}
               <Link
                 href="/admin"
-                className="hidden md:inline-flex items-center gap-1.5 text-xs text-[#E8DCCF]/70 hover:text-[#FAF7F2] px-2.5 py-1 rounded-full border border-white/15 hover:border-[#D6B27C] transition-colors"
+                className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold text-white hover:text-[#D6B27C] px-3 py-1.5 rounded-full border border-white/20 hover:border-[#D6B27C] bg-white/5 transition-colors"
                 title="Admin Studio"
               >
-                <Lock size={12} />
+                <Lock size={12} strokeWidth={2} />
                 <span>Admin</span>
               </Link>
 
@@ -156,10 +157,10 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
-                className="relative flex items-center gap-2 bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] px-3.5 py-2 sm:px-4 sm:py-2 rounded-full transition-all active:scale-95 shadow-md font-bold"
+                className="relative flex items-center gap-2 bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] px-4 py-2 rounded-full transition-all active:scale-95 shadow-md font-bold"
                 aria-label={`Open Cart (${cartCount} items)`}
               >
-                <ShoppingBag size={17} strokeWidth={2.2} />
+                <ShoppingBag size={17} strokeWidth={2.4} />
                 <span className="text-xs font-bold tracking-wider uppercase hidden sm:inline">
                   Bag
                 </span>
@@ -184,10 +185,10 @@ export default function Header() {
               <div className="flex items-center justify-between pb-6 border-b border-white/10">
                 <Image
                   src="/images/logo-ibrew.png"
-                  alt="ibrew"
-                  width={120}
-                  height={36}
-                  className="h-8 w-auto object-contain brightness-0 invert"
+                  alt="ibrew Luxury Roasters"
+                  width={180}
+                  height={58}
+                  className="h-10 sm:h-11 w-auto object-contain brightness-0 invert"
                 />
                 <button
                   type="button"
