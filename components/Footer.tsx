@@ -182,9 +182,9 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[#C4B7A7]">
               <li>Mon – Sat: 9:00 AM – 7:00 PM</li>
-              <li className="text-[#FAF7F2] font-semibold">+91 99950 67188</li>
+              <li className="text-[#FAF7F2] font-semibold">+91 7907 217 317</li>
               <li>concierge@ibrew.luxury</li>
-              <li>Coordinate Estates, Western Ghats</li>
+              <li>Imaan’s Trading, NH 66 - Arikady, Kumbla, Kasaragod, Kerala 671321</li>
             </ul>
           </div>
 

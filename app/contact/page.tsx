@@ -91,7 +91,7 @@ export default function ContactPage() {
 
             <div className="space-y-4">
               <a
-                href="https://wa.me/919995067188?text=Hello%20ibrew%20Concierge,%20I%20would%20like%20to%20inquire%20about%20your%20offerings."
+                href="https://wa.me/917907217317?text=Hello%20Concierge,%20I%20would%20like%20to%20inquire%20about%20your%20offerings."
                 target="_blank"
                 rel="noreferrer"
                 className="group flex items-start gap-4 p-5 rounded-2xl bg-[#1E1916] border border-white/10 shadow-lg hover:border-[#52B788]/50 transition-all"
@@ -104,7 +104,7 @@ export default function ContactPage() {
                     <span>Direct WhatsApp Concierge</span>
                     <span className="text-[10px] bg-[#52B788]/20 text-[#52B788] px-2 py-0.5 rounded-full font-bold">Fastest</span>
                   </h3>
-                  <p className="text-xs text-[#C4B7A7] mt-0.5">+91 99950 67188</p>
+                  <p className="text-xs text-[#C4B7A7] mt-0.5">+91 7907 217 317</p>
                   <p className="text-[11px] text-[#D6B27C] mt-2 font-semibold">Tap to chat with our team on WhatsApp →</p>
                 </div>
               </a>
@@ -115,7 +115,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">Telephone Concierge</h3>
-                  <p className="text-xs text-[#C4B7A7] mt-0.5">+91 99950 67188 / +91 80 4120 8900</p>
+                  <p className="text-xs text-[#C4B7A7] mt-0.5">+91 7907 217 317</p>
                   <p className="text-[11px] text-white/40 mt-1">Available Mon – Sat, 9:00 AM – 7:00 PM IST</p>
                 </div>
               </div>
@@ -135,12 +135,23 @@ export default function ContactPage() {
                 <div className="h-11 w-11 rounded-xl bg-white/5 flex items-center justify-center text-[#D6B27C] shrink-0">
                   <MapPin size={20} />
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white">ibrew Tasting Roastery</h3>
-                  <p className="text-xs text-[#C4B7A7] mt-0.5 leading-relaxed">
-                    Estate Block 4, Western Ghats Foothills,<br />
-                    Wayanad &amp; Coorg Border, Karnataka 571216, India
+                <div className="space-y-1">
+                  <h3 className="text-sm font-bold text-white">Imaan’s Trading</h3>
+                  <p className="text-xs text-[#C4B7A7] leading-relaxed">
+                    NH 66 - Arikady, Kumbla,<br />
+                    Post Code: 671321.<br />
+                    Kasaragod, Kerala, India
                   </p>
+                  <div className="pt-2">
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Arikady+Kumbla+Kasaragod+Kerala+671321"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D6B27C] hover:text-white transition-colors"
+                    >
+                      <span>Open in Google Maps →</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
