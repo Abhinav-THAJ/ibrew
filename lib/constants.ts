@@ -7,6 +7,9 @@ export const CATEGORY_LABELS: Record<string, string> = {
   spices: "Spices",
   importedbed: "Mattresses",
   perfumeoil: "Perfume Oils",
+  grocery: "Grocery",
+  dates: "Dates",
+  "bulk-order": "Bulk Order",
 };
 
 // Types shown in the form for each category. Fill in the other three to match your pages.

@@ -120,6 +120,21 @@ export default function ProductForm({ product }: { product?: ProductType }) {
       slug: "importedbed",
       subCategories: ["Organic Latex Mattresses", "Ergonomic Mattresses", "Orthopedic Mattresses", "Mattress Toppers & Covers"],
     },
+    {
+      name: "Grocery",
+      slug: "grocery",
+      subCategories: ["Cold-Pressed Oils", "Heirloom Rice & Grains", "Organic Pulses", "Raw Forest Honey", "Pantry Provisions"],
+    },
+    {
+      name: "Dates",
+      slug: "dates",
+      subCategories: ["Royal Medjool Dates", "Ajwa Al-Madinah", "Soft Safawi Dates", "Nut-Stuffed Dates", "Artisanal Date Syrup"],
+    },
+    {
+      name: "Bulk Order",
+      slug: "bulk-order",
+      subCategories: ["Cafe Wholesale Beans", "Bulk Spices & Seasonings", "Hospitality Supplies", "Corporate Festive Hampers"],
+    },
   ]);
 
   const [showNewCatInput, setShowNewCatInput] = useState(false);

@@ -16,6 +16,7 @@ import {
   Flower2,
   Layers,
   ArrowUpDown,
+  Truck,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
 import { formatPrice, ProductItem } from "@/data/products";
@@ -97,6 +98,9 @@ function ShopContent() {
     { id: "spices", label: "Estate Spices", icon: Leaf },
     { id: "perfumeoil", label: "Rare Fragrance Oils", icon: Flower2 },
     { id: "importedbed", label: "Mattresses", icon: Layers },
+    { id: "grocery", label: "Grocery", icon: ShoppingBag },
+    { id: "dates", label: "Dates", icon: Sparkles },
+    { id: "bulk-order", label: "Bulk Order", icon: Truck },
   ]);
 
   useEffect(() => {
@@ -111,6 +115,10 @@ function ShopContent() {
               spices: Leaf,
               perfumeoil: Flower2,
               importedbed: Layers,
+              grocery: ShoppingBag,
+              dates: Sparkles,
+              "bulk-order": Truck,
+              bulkorder: Truck,
             };
             const mapped = [
               { id: "all", label: "All Offerings", icon: Sparkles },

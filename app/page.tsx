@@ -14,6 +14,7 @@ import {
   Flower2,
   Layers,
   ChevronRight,
+  Truck,
 } from "lucide-react";
 import { useCart } from "@/components/CartContext";
 import { formatPrice, ProductItem } from "@/data/products";
@@ -113,6 +114,33 @@ export default function HomePage() {
       icon: Layers,
       badge: "European Craft",
     },
+    {
+      title: "Grocery",
+      tagline: "Cold-pressed oils & heirloom pantry essentials",
+      desc: "Daily culinary provisions, single-origin cold-pressed oils, wild honey, and certified organic heirloom grains.",
+      image: "/images/spices/banner.avif",
+      href: "/shop?category=grocery",
+      icon: ShoppingBag,
+      badge: "Artisanal Pantry",
+    },
+    {
+      title: "Dates",
+      tagline: "Royal Medjool & revered Ajwa palms",
+      desc: "Hand-selected royal Medjool, soft Safawi, and reverent Ajwa dates directly sourced from certified oasis groves.",
+      image: "/images/spices/cardamom.avif",
+      href: "/shop?category=dates",
+      icon: Sparkles,
+      badge: "Oasis Harvest",
+    },
+    {
+      title: "Bulk Order",
+      tagline: "Wholesale tier-rates & corporate gifting",
+      desc: "Special tiered volume pricing for boutique cafes, roasteries, hotels, restaurants, and bespoke corporate gift hampers.",
+      image: "/images/Barista Pouring Coffee.png",
+      href: "/shop?category=bulk-order",
+      icon: Truck,
+      badge: "Commercial Tier",
+    },
   ]);
 
   useEffect(() => {
@@ -127,6 +155,10 @@ export default function HomePage() {
               spices: Leaf,
               perfumeoil: Flower2,
               importedbed: Layers,
+              grocery: ShoppingBag,
+              dates: Sparkles,
+              "bulk-order": Truck,
+              bulkorder: Truck,
             };
             const mapped = data.map((cat: any) => ({
               title: cat.name,
@@ -210,7 +242,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {pillars.map((pillar) => {
             const Icon = pillar.icon;
             return (
