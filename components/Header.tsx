@@ -101,7 +101,7 @@ export default function Header() {
                   width={240}
                   height={78}
                   priority
-                  className="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_12px_rgba(214,178,124,0.35)]"
+                  className="h-10 sm:h-12 lg:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_12px_rgba(214,178,124,0.35)]"
                 />
               </Link>
             </div>
@@ -215,7 +215,7 @@ export default function Header() {
             </div>
 
             <div className="pt-6 border-t border-white/10 text-xs text-[#C4B7A7] space-y-2">
-              <p>Direct Inquiries: +91 99950 67188</p>
+              <p>Direct Inquiries: +91 7907 217 317</p>
               <p>Email: concierge@ibrew.luxury</p>
             </div>
           </div>

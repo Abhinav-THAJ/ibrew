@@ -246,7 +246,7 @@ function SingleProductContent() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* BREADCRUMB & BACK NAVIGATION */}
-        <nav className="flex flex-wrap items-center justify-between gap-4 mb-8 text-xs text-[#C4B7A7] border-b border-white/10 pb-4">
+        <nav className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 text-xs text-[#C4B7A7] border-b border-white/10 pb-3 sm:pb-4">
           <div className="flex items-center gap-2 overflow-x-auto">
             <Link href="/" className="hover:text-white transition-colors">
               Home
@@ -291,7 +291,7 @@ function SingleProductContent() {
           
           {/* LEFT: IMMERSIVE GALLERY & PROVENANCE PILLARS */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="relative h-[420px] sm:h-[520px] w-full rounded-3xl overflow-hidden bg-[#1E1916] border border-white/10 shadow-2xl group">
+            <div className="relative h-[320px] sm:h-[440px] lg:h-[520px] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-[#1E1916] border border-white/10 shadow-2xl group">
               <Image
                 src={activeImage || product.image}
                 alt={product.name}

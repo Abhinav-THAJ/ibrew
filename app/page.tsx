@@ -249,9 +249,9 @@ export default function HomePage() {
               <Link
                 key={pillar.title}
                 href={pillar.href}
-                className="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1E1916] border border-white/10 p-5 transition-all duration-300 hover:shadow-2xl hover:border-[#D6B27C]/40"
+                className="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1E1916] border border-white/10 p-4 sm:p-5 transition-all duration-300 hover:shadow-2xl hover:border-[#D6B27C]/40"
               >
-                <div className="relative h-64 w-full overflow-hidden rounded-xl bg-white/5">
+                <div className="relative h-52 sm:h-64 w-full overflow-hidden rounded-xl bg-white/5">
                   <Image
                     src={pillar.image}
                     alt={pillar.title}
@@ -369,7 +369,7 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-white/8 flex items-center justify-between gap-3">
+                  <div className="pt-3 border-t border-white/8 flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
                     <Link href={`/shop/${product.id}`}>
                       <div className="text-base font-bold text-white">
                         {formatPrice(product.price)}
@@ -444,20 +444,20 @@ export default function HomePage() {
               We believe luxury is not an emblem, but the quiet satisfaction of knowing who grew your crop and where it came from.
             </p>
 
-            <div className="pt-4 flex items-center gap-6">
+            <div className="pt-4 flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
               <div>
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-white">100%</p>
-                <p className="text-[11px] text-[#A69989] uppercase tracking-wider">Direct Origin</p>
+                <p className="text-xl sm:text-3xl font-serif font-bold text-white">100%</p>
+                <p className="text-[10px] sm:text-[11px] text-[#A69989] uppercase tracking-wider">Direct Origin</p>
               </div>
-              <div className="h-10 w-[1px] bg-white/15" />
+              <div className="h-8 sm:h-10 w-[1px] bg-white/15" />
               <div>
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-white">4,200ft</p>
-                <p className="text-[11px] text-[#A69989] uppercase tracking-wider">Estate Altitude</p>
+                <p className="text-xl sm:text-3xl font-serif font-bold text-white">4,200ft</p>
+                <p className="text-[10px] sm:text-[11px] text-[#A69989] uppercase tracking-wider">Estate Altitude</p>
               </div>
-              <div className="h-10 w-[1px] bg-white/15" />
+              <div className="h-8 sm:h-10 w-[1px] bg-white/15" />
               <div>
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-white">Zero</p>
-                <p className="text-[11px] text-[#A69989] uppercase tracking-wider">Artificial Fillers</p>
+                <p className="text-xl sm:text-3xl font-serif font-bold text-white">Zero</p>
+                <p className="text-[10px] sm:text-[11px] text-[#A69989] uppercase tracking-wider">Additives</p>
               </div>
             </div>
 
