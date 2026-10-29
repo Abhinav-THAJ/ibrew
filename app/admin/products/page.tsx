@@ -4,6 +4,8 @@ import connectDB from "@/lib/mongodb";
 import Product, { ProductType } from "@/models/product";
 import ProductsTable from "./ProductsTable";
 
+export const dynamic = "force-dynamic";
+
 async function ProductsData() {
   await connectDB();
   const products: ProductType[] = JSON.parse(

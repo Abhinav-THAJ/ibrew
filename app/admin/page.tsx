@@ -5,6 +5,8 @@ import Product, { ProductType } from "@/models/product";
 import Order from "@/models/order";
 import { CATEGORIES, CATEGORY_LABELS } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 const money = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 async function DashboardData() {
