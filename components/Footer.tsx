@@ -184,14 +184,7 @@ export default function Footer() {
               <li>Mon – Sat: 9:00 AM – 7:00 PM</li>
               <li className="text-[#FAF7F2] font-semibold">+91 99950 67188</li>
               <li>concierge@ibrew.luxury</li>
-              <li className="pt-2">
-                <Link
-                  href="/admin"
-                  className="inline-block text-[#D6B27C] hover:underline"
-                >
-                  Admin Portal Login →
-                </Link>
-              </li>
+              <li>Coordinate Estates, Western Ghats</li>
             </ul>
           </div>
 

@@ -14,7 +14,6 @@ import {
   Trash2,
   ArrowRight,
   Sparkles,
-  Lock,
 } from "lucide-react";
 
 import { useCart } from "./CartContext";
@@ -143,16 +142,6 @@ export default function Header() {
                 <Search size={20} strokeWidth={2} />
               </Link>
 
-              {/* Admin Dashboard shortcut */}
-              <Link
-                href="/admin"
-                className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold text-white hover:text-[#D6B27C] px-3 py-1.5 rounded-full border border-white/20 hover:border-[#D6B27C] bg-white/5 transition-colors"
-                title="Admin Studio"
-              >
-                <Lock size={12} strokeWidth={2} />
-                <span>Admin</span>
-              </Link>
-
               {/* Cart Drawer Trigger */}
               <button
                 type="button"
@@ -228,12 +217,6 @@ export default function Header() {
             <div className="pt-6 border-t border-white/10 text-xs text-[#C4B7A7] space-y-2">
               <p>Direct Inquiries: +91 99950 67188</p>
               <p>Email: concierge@ibrew.luxury</p>
-              <Link
-                href="/admin"
-                className="inline-block mt-2 text-[#D6B27C] font-semibold underline underline-offset-2"
-              >
-                Go to Admin Portal
-              </Link>
             </div>
           </div>
         </div>
