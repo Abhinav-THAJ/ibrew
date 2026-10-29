@@ -309,3 +309,7 @@ export function formatPrice(amount: number): string {
   return "₹" + amount.toLocaleString("en-IN");
 }
 
+export function getProductById(id: string): ProductItem | undefined {
+  return INITIAL_PRODUCTS.find((p) => p.id === id);
+}
+

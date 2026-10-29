@@ -217,7 +217,10 @@ export default function HomePage() {
                 key={product.id}
                 className="group flex flex-col bg-[#1E1916] rounded-2xl border border-white/10 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-[#D6B27C]/40"
               >
-                <div className="relative h-72 w-full overflow-hidden bg-white/5">
+                <Link
+                  href={`/shop/${product.id}`}
+                  className="relative h-72 w-full overflow-hidden bg-white/5 block cursor-pointer"
+                >
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -234,7 +237,7 @@ export default function HomePage() {
                       {product.weightOrSize}
                     </span>
                   )}
-                </div>
+                </Link>
 
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div>
@@ -251,16 +254,18 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-serif font-bold text-white leading-snug group-hover:text-[#D6B27C] transition-colors">
-                      {product.name}
-                    </h3>
+                    <Link href={`/shop/${product.id}`} className="block">
+                      <h3 className="text-lg font-serif font-bold text-white leading-snug group-hover:text-[#D6B27C] transition-colors">
+                        {product.name}
+                      </h3>
+                    </Link>
                     <p className="text-xs text-[#C4B7A7] mt-1.5 line-clamp-2 leading-relaxed">
                       {product.tagline}
                     </p>
                   </div>
 
                   <div className="pt-3 border-t border-white/8 flex items-center justify-between gap-3">
-                    <div>
+                    <Link href={`/shop/${product.id}`}>
                       <div className="text-base font-bold text-white">
                         {formatPrice(product.price)}
                       </div>
@@ -269,27 +274,35 @@ export default function HomePage() {
                           MRP {formatPrice(product.mrp)}
                         </div>
                       )}
-                    </div>
+                    </Link>
 
-                    <button
-                      type="button"
-                      onClick={() => handleAdd(product)}
-                      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all active:scale-95 shadow-md ${
-                        isAdded
-                          ? "bg-[#52B788] text-white"
-                          : "bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D]"
-                      }`}
-                    >
-                      {isAdded ? (
-                        <>
-                          <Check size={14} /> Added
-                        </>
-                      ) : (
-                        <>
-                          <ShoppingBag size={14} /> Add to Bag
-                        </>
-                      )}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/shop/${product.id}`}
+                        className="text-[11px] font-semibold text-[#D6B27C] hover:text-white px-3 py-1.5 rounded-full border border-[#D6B27C]/30 hover:border-[#D6B27C] transition-colors"
+                      >
+                        Explore
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleAdd(product)}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold tracking-wider uppercase transition-all active:scale-95 shadow-md ${
+                          isAdded
+                            ? "bg-[#52B788] text-white"
+                            : "bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D]"
+                        }`}
+                      >
+                        {isAdded ? (
+                          <>
+                            <Check size={14} /> Added
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingBag size={14} /> Add to Bag
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </article>
