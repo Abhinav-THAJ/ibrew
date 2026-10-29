@@ -3,12 +3,22 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { ExternalLink, LayoutDashboard, LogOut, Menu, Package, PlusSquare, X } from "lucide-react";
+import {
+  ExternalLink,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Package,
+  PlusSquare,
+  ShoppingBag,
+  X,
+} from "lucide-react";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/add", label: "Add product", icon: PlusSquare },
+  { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
 ];
 
 export default function AdminShell({ children }: { children: ReactNode }) {
@@ -22,6 +32,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     if (href === "/admin") return pathname === "/admin";
     if (href === "/admin/products")
       return pathname.startsWith("/admin/products") || pathname.startsWith("/admin/edit");
+    if (href === "/admin/orders") return pathname.startsWith("/admin/orders");
     return pathname.startsWith(href);
   };
 

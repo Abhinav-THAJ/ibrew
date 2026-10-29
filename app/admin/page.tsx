@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import connectDB from "@/lib/mongodb";
 import Product, { ProductType } from "@/models/product";
+import Order from "@/models/order";
 import { CATEGORIES, CATEGORY_LABELS } from "@/lib/constants";
 
 const money = (n: number) => `₹${n.toLocaleString("en-IN")}`;
@@ -11,6 +12,7 @@ async function DashboardData() {
   const products: ProductType[] = JSON.parse(
     JSON.stringify(await Product.find().sort({ createdAt: -1 }).lean())
   );
+  const orderCount = await Order.countDocuments();
 
   const total = products.length;
   const featured = products.filter((p) => p.featured).length;
@@ -20,9 +22,9 @@ async function DashboardData() {
 
   const stats = [
     { label: "Total products", value: total },
+    { label: "Patron Orders", value: orderCount },
     { label: "Featured", value: featured },
-    { label: "Low stock (5 or less)", value: lowStock },
-    { label: "Sold out", value: soldOut },
+    { label: "Low stock (≤5)", value: lowStock },
   ];
 
   const byCategory = CATEGORIES.map((c) => ({
@@ -127,12 +129,20 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-semibold">Dashboard</h1>
           <p className="mt-1 text-sm text-neutral-500">Overview of your store.</p>
         </div>
-        <Link
-          href="/admin/add"
-          className="bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-neutral-800"
-        >
-          + Add product
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/orders"
+            className="border border-neutral-300 bg-white px-5 py-3 text-sm font-medium transition hover:bg-neutral-50"
+          >
+            View Orders
+          </Link>
+          <Link
+            href="/admin/add"
+            className="bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-neutral-800"
+          >
+            + Add product
+          </Link>
+        </div>
       </div>
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardData />

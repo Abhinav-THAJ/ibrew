@@ -3,9 +3,6 @@ import mongoose from "mongoose";
 const raw = process.env.MONGODB_URI ?? "";
 const MONGODB_URI = raw.trim().replace(/^["']|["']$/g, "");
 
-// Temporary debug line: shows only the first 15 characters
-console.log("URI check:", JSON.stringify(MONGODB_URI.slice(0, 15)), "length:", MONGODB_URI.length);
-
 if (!MONGODB_URI) throw new Error("Define MONGODB_URI in .env.local");
 
 interface MongooseCache {
@@ -27,7 +24,7 @@ export default async function connectDB() {
   try {
     cached.conn = await cached.promise;
   } catch (e) {
-    cached.promise = null; // don't keep a failed attempt
+    cached.promise = null; // reset on failure so next call can retry
     throw e;
   }
   return cached.conn;

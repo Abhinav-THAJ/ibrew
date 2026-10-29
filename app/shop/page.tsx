@@ -76,12 +76,10 @@ function ShopContent() {
   }, []);
 
   const allProducts = useMemo(() => {
-    const combined = [...dbProducts, ...INITIAL_PRODUCTS];
-    const unique = new Map<string, ProductItem>();
-    combined.forEach((item) => {
-      if (!unique.has(item.id)) unique.set(item.id, item);
-    });
-    return Array.from(unique.values());
+    if (dbProducts.length > 0) {
+      return dbProducts;
+    }
+    return INITIAL_PRODUCTS;
   }, [dbProducts]);
 
   const categories = [

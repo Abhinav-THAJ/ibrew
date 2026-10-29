@@ -16,3 +16,15 @@ export async function GET(req: NextRequest) {
   const products = await Product.find(filter).sort({ createdAt: -1 });
   return NextResponse.json(products);
 }
+
+export async function POST(req: NextRequest) {
+  await connectDB();
+  try {
+    const body = await req.json();
+    const product = await Product.create(body);
+    return NextResponse.json(product, { status: 201 });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Validation error";
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
+}

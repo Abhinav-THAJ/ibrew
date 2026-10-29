@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -21,8 +21,44 @@ import { INITIAL_PRODUCTS, formatPrice, ProductItem } from "@/data/products";
 export default function HomePage() {
   const { addToCart } = useCart();
   const [addedId, setAddedId] = useState<string | null>(null);
+  const [products, setProducts] = useState<ProductItem[]>(INITIAL_PRODUCTS);
 
-  const featuredProducts = INITIAL_PRODUCTS.filter((p) => p.featured).slice(0, 6);
+  useEffect(() => {
+    async function loadFeatured() {
+      try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const mapped: ProductItem[] = data.map((item: any) => ({
+              id: item._id,
+              name: item.name,
+              tagline: item.description?.slice(0, 80) || "",
+              description: item.description || "",
+              category: item.category,
+              subCategory: item.subCategory || "Estate Selection",
+              price: item.price,
+              mrp: item.mrp || item.price,
+              rating: 5.0,
+              reviewsCount: 18,
+              image: item.images?.[0]?.url || "/images/coffebags.png",
+              badge: item.badge || undefined,
+              featured: item.featured || false,
+              stock: item.stock || 20,
+              weightOrSize: item.subCategory,
+              origin: "Artisanal Reserve",
+            }));
+            setProducts(mapped);
+          }
+        }
+      } catch (e) {
+        console.warn("Using static fallback:", e);
+      }
+    }
+    loadFeatured();
+  }, []);
+
+  const featuredProducts = products.filter((p) => p.featured).slice(0, 6);
 
   const handleAdd = (item: ProductItem) => {
     addToCart({

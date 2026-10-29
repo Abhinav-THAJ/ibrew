@@ -56,12 +56,20 @@ export default function ProductForm({ product }: { product?: ProductType }) {
     featured: product?.featured ?? false,
   });
   const [images, setImages] = useState<IImage[]>(product?.images ?? []);
+  const [urlInput, setUrlInput] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const change = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const addImageUrl = () => {
+    const trimmed = urlInput.trim();
+    if (!trimmed) return;
+    setImages((prev) => [...prev, { url: trimmed, public_id: "" }]);
+    setUrlInput("");
+  };
 
   async function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
@@ -75,7 +83,7 @@ export default function ProductForm({ product }: { product?: ProductType }) {
       const data: { images: IImage[] } = await res.json();
       setImages((prev) => [...prev, ...data.images]);
     } catch {
-      alert("Image upload failed");
+      alert("Image upload failed. You can also paste an image URL directly.");
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -85,23 +93,29 @@ export default function ProductForm({ product }: { product?: ProductType }) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
-    const res = await fetch(product ? `/api/products/${product._id}` : "/api/products", {
-      method: product ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...form,
-        price: Number(form.price),
-        mrp: Number(form.mrp) || 0,
-        stock: Number(form.stock) || 0,
-        images,
-      }),
-    });
-    setSaving(false);
-    if (res.ok) {
-      router.push("/admin/products");
-      router.refresh();
-    } else {
-      alert("Something went wrong. Check the fields and try again.");
+    try {
+      const res = await fetch(product ? `/api/products/${product._id}` : "/api/products", {
+        method: product ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          price: Number(form.price),
+          mrp: Number(form.mrp) || 0,
+          stock: Number(form.stock) || 0,
+          images,
+        }),
+      });
+      setSaving(false);
+      if (res.ok) {
+        router.push("/admin/products");
+        router.refresh();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || "Something went wrong. Check the fields and try again.");
+      }
+    } catch {
+      setSaving(false);
+      alert("Network error. Could not connect to API.");
     }
   }
 
@@ -146,7 +160,7 @@ export default function ProductForm({ product }: { product?: ProductType }) {
               ))}
             </select>
           </Field>
-          <Field label="Type">
+          <Field label="Type / Subcategory">
             <select name="subCategory" value={form.subCategory} onChange={change} className={field}>
               <option value="">Select type</option>
               {SUBCATEGORIES[form.category].map((s) => (
@@ -158,7 +172,7 @@ export default function ProductForm({ product }: { product?: ProductType }) {
           </Field>
         </div>
 
-        <Field label="Badge" hint="Optional, e.g. Bestseller, New, Popular">
+        <Field label="Badge" hint="Optional, e.g. Bestseller, New, Popular, Signature Roast">
           <input name="badge" value={form.badge} onChange={change} className={field} />
         </Field>
       </div>
@@ -167,18 +181,42 @@ export default function ProductForm({ product }: { product?: ProductType }) {
       <div className="space-y-6">
         <div className="border border-neutral-200 bg-white p-6">
           <h2 className="text-sm font-semibold uppercase tracking-widest">Images</h2>
-          <p className="mt-1 text-xs text-neutral-400">First image is the main photo. Second shows on hover.</p>
+          <p className="mt-1 text-xs text-neutral-400">First image is the main photo. Drag or add image URL.</p>
 
           <label className="mt-4 flex cursor-pointer flex-col items-center justify-center border border-dashed border-neutral-400 px-4 py-8 text-center text-sm transition hover:border-black hover:bg-neutral-50">
-            <span className="font-medium">{uploading ? "Uploading..." : "Click to upload images"}</span>
-            <span className="mt-1 text-xs text-neutral-400">PNG, JPG or WEBP</span>
+            <span className="font-medium">{uploading ? "Uploading..." : "Click to upload files"}</span>
+            <span className="mt-1 text-xs text-neutral-400">PNG, JPG, WEBP or AVIF</span>
             <input type="file" multiple accept="image/*" onChange={handleFiles} className="hidden" disabled={uploading} />
           </label>
+
+          {/* Direct URL input fallback */}
+          <div className="mt-3 flex gap-2">
+            <input
+              type="text"
+              placeholder="Or enter image URL (/images/...)"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addImageUrl();
+                }
+              }}
+              className="flex-1 border border-neutral-300 px-3 py-2 text-xs outline-none focus:border-black"
+            />
+            <button
+              type="button"
+              onClick={addImageUrl}
+              className="bg-black text-white px-3 py-2 text-xs font-semibold uppercase tracking-wider hover:bg-neutral-800 transition"
+            >
+              + Add
+            </button>
+          </div>
 
           {images.length > 0 && (
             <div className="mt-4 grid grid-cols-3 gap-2">
               {images.map((img, i) => (
-                <div key={img.public_id || img.url} className="group relative aspect-square bg-neutral-200">
+                <div key={img.public_id || img.url || i} className="group relative aspect-square bg-neutral-200 rounded overflow-hidden">
                   <img src={img.url} alt="" className="h-full w-full object-cover" />
                   {i === 0 && (
                     <span className="absolute left-0 top-0 bg-black px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-white">
@@ -189,7 +227,7 @@ export default function ProductForm({ product }: { product?: ProductType }) {
                     type="button"
                     onClick={() => setImages(images.filter((_, idx) => idx !== i))}
                     aria-label="Remove image"
-                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center bg-black text-xs text-white opacity-0 transition group-hover:opacity-100"
+                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center bg-black/80 rounded text-xs text-white opacity-0 transition group-hover:opacity-100"
                   >
                     ✕
                   </button>
