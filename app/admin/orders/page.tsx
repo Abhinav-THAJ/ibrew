@@ -3,7 +3,6 @@ import connectDB from "@/lib/mongodb";
 import Order, { OrderType } from "@/models/order";
 import OrdersClient from "./OrdersClient";
 
-export const dynamic = "force-dynamic";
 
 async function OrdersData() {
   await connectDB();
