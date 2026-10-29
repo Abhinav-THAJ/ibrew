@@ -16,19 +16,22 @@ async function OrdersData() {
   const activeOrders = orders.filter((o) => o.status === "confirmed" || o.status === "processing").length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="border border-black bg-black p-5 text-white">
-          <p className="text-xs uppercase tracking-widest text-white/60">Total Orders</p>
-          <p className="mt-2 text-3xl font-semibold">{totalOrders}</p>
+        <div className="rounded-2xl border border-[#D6B27C]/40 bg-[#241E1A] p-6 text-white shadow-lg">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#D6B27C]">Total Orders Placed</p>
+          <p className="mt-3 text-3xl sm:text-4xl font-serif font-bold">{totalOrders}</p>
         </div>
-        <div className="border border-neutral-200 bg-white p-5">
-          <p className="text-xs uppercase tracking-widest text-neutral-500">Gross Patron Revenue</p>
-          <p className="mt-2 text-3xl font-semibold">₹{totalRevenue.toLocaleString("en-IN")}</p>
+        <div className="rounded-2xl border border-white/10 bg-[#181311] p-6 text-white">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#D6B27C]">Gross Patron Revenue</p>
+          <p className="mt-3 text-3xl sm:text-4xl font-serif font-bold text-[#D6B27C]">
+            ₹{totalRevenue.toLocaleString("en-IN")}
+          </p>
         </div>
-        <div className="border border-neutral-200 bg-white p-5">
-          <p className="text-xs uppercase tracking-widest text-neutral-500">In Fulfillment</p>
-          <p className="mt-2 text-3xl font-semibold">{activeOrders}</p>
+        <div className="rounded-2xl border border-white/10 bg-[#181311] p-6 text-white">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#D6B27C]">In Active Fulfillment</p>
+          <p className="mt-3 text-3xl sm:text-4xl font-serif font-bold">{activeOrders}</p>
         </div>
       </div>
 
@@ -39,13 +42,17 @@ async function OrdersData() {
 
 export default function AdminOrdersPage() {
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold">Patron Orders</h1>
-        <p className="mt-1 text-sm text-neutral-500">Track and fulfill orders placed across India.</p>
+    <div className="space-y-8">
+      <div className="border-b border-white/10 pb-6">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white">
+          Patron Orders
+        </h1>
+        <p className="mt-1 text-xs text-[#A89A8C]">
+          Track, dispatch, and fulfill artisanal orders across India.
+        </p>
       </div>
 
-      <Suspense fallback={<div className="h-64 animate-pulse bg-neutral-200 rounded-xl" />}>
+      <Suspense fallback={<div className="h-64 rounded-2xl animate-pulse bg-white/5" />}>
         <OrdersData />
       </Suspense>
     </div>

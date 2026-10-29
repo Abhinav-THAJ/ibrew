@@ -5,16 +5,18 @@ import { useRouter } from "next/navigation";
 import { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES } from "@/lib/constants";
 import type { Category } from "@/lib/constants";
 import type { ProductType, IImage } from "@/models/product";
+import { ArrowLeft, Check, Plus, Upload, X } from "lucide-react";
+import Link from "next/link";
 
 const field =
-  "w-full border border-neutral-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-black";
+  "w-full rounded-xl border border-white/15 bg-[#241E1A] px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition focus:border-[#D6B27C] focus:ring-1 focus:ring-[#D6B27C]";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-widest text-neutral-600">{label}</span>
+      <span className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#D6B27C]">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-neutral-400">{hint}</span>}
+      {hint && <span className="mt-1.5 block text-[11px] text-[#A89A8C]">{hint}</span>}
     </label>
   );
 }
@@ -29,13 +31,13 @@ function Toggle({
   label: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between border border-neutral-200 px-4 py-3 text-sm">
-      {label}
+    <label className="flex cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-[#241E1A] px-4 py-3 text-xs font-semibold text-white transition hover:border-[#D6B27C]/40">
+      <span>{label}</span>
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 accent-black"
+        className="h-4 w-4 accent-[#D6B27C] rounded cursor-pointer"
       />
     </label>
   );
@@ -120,33 +122,54 @@ export default function ProductForm({ product }: { product?: ProductType }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-3">
+    <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-3">
       {/* left: details */}
-      <div className="space-y-5 border border-neutral-200 bg-white p-6 lg:col-span-2">
-        <h2 className="text-sm font-semibold uppercase tracking-widest">Product details</h2>
+      <div className="space-y-6 rounded-2xl border border-white/10 bg-[#181311] p-6 lg:col-span-2 text-[#FAF7F2]">
+        <div className="border-b border-white/10 pb-4">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-[#D6B27C]">
+            Artisanal Offering Details
+          </h2>
+          <p className="mt-1 text-xs text-[#A89A8C]">
+            Title, provenance notes, harvest details, and pricing.
+          </p>
+        </div>
 
-        <Field label="Name">
-          <input name="name" value={form.name} onChange={change} required className={field} placeholder="e.g. Premium Arabica Coffee Powder" />
+        <Field label="Offering Title">
+          <input
+            name="name"
+            value={form.name}
+            onChange={change}
+            required
+            className={field}
+            placeholder="e.g. Malabar Monsoon Estate Arabica"
+          />
         </Field>
 
-        <Field label="Description">
-          <textarea name="description" value={form.description} onChange={change} rows={4} className={field} placeholder="Short description shown on the product card" />
+        <Field label="Sensory Description & Provenance">
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={change}
+            rows={4}
+            className={field}
+            placeholder="Detailed notes on terroir, roast profile, harvest elevation, or botanical distillation..."
+          />
         </Field>
 
         <div className="grid gap-5 sm:grid-cols-3">
-          <Field label="Price (₹)">
+          <Field label="Store Price (₹)">
             <input name="price" type="number" min={0} value={form.price} onChange={change} required className={field} />
           </Field>
-          <Field label="MRP (₹)" hint="Optional, shown struck through">
+          <Field label="MRP / Valued At (₹)" hint="Shown struck through">
             <input name="mrp" type="number" min={0} value={form.mrp} onChange={change} className={field} />
           </Field>
-          <Field label="Stock">
+          <Field label="Reserve Stock Units">
             <input name="stock" type="number" min={0} value={form.stock} onChange={change} className={field} />
           </Field>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Category">
+          <Field label="Primary Collection">
             <select
               name="category"
               value={form.category}
@@ -154,17 +177,17 @@ export default function ProductForm({ product }: { product?: ProductType }) {
               className={field}
             >
               {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
+                <option key={c} value={c} className="bg-[#181311] text-white">
                   {CATEGORY_LABELS[c]}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Type / Subcategory">
+          <Field label="Subcategory / Preparation">
             <select name="subCategory" value={form.subCategory} onChange={change} className={field}>
-              <option value="">Select type</option>
+              <option value="" className="bg-[#181311] text-white">Select subcategory</option>
               {SUBCATEGORIES[form.category].map((s) => (
-                <option key={s} value={s}>
+                <option key={s} value={s} className="bg-[#181311] text-white">
                   {s}
                 </option>
               ))}
@@ -172,25 +195,32 @@ export default function ProductForm({ product }: { product?: ProductType }) {
           </Field>
         </div>
 
-        <Field label="Badge" hint="Optional, e.g. Bestseller, New, Popular, Signature Roast">
+        <Field label="Promotional Badge" hint="e.g. Signature Roast, TGSEB Grade, Limited Reserve, Bestseller">
           <input name="badge" value={form.badge} onChange={change} className={field} />
         </Field>
       </div>
 
       {/* right: images and visibility */}
       <div className="space-y-6">
-        <div className="border border-neutral-200 bg-white p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-widest">Images</h2>
-          <p className="mt-1 text-xs text-neutral-400">First image is the main photo. Drag or add image URL.</p>
+        <div className="rounded-2xl border border-white/10 bg-[#181311] p-6 text-[#FAF7F2]">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-[#D6B27C]">
+            Visual Imagery
+          </h2>
+          <p className="mt-1 text-xs text-[#A89A8C]">
+            First image is the primary cover. Upload or link URL.
+          </p>
 
-          <label className="mt-4 flex cursor-pointer flex-col items-center justify-center border border-dashed border-neutral-400 px-4 py-8 text-center text-sm transition hover:border-black hover:bg-neutral-50">
-            <span className="font-medium">{uploading ? "Uploading..." : "Click to upload files"}</span>
-            <span className="mt-1 text-xs text-neutral-400">PNG, JPG, WEBP or AVIF</span>
+          <label className="mt-4 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-white/20 bg-[#241E1A] px-4 py-8 text-center transition hover:border-[#D6B27C] hover:bg-white/5">
+            <Upload size={20} className="text-[#D6B27C] mb-2" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">
+              {uploading ? "Uploading Image..." : "Click to Upload Files"}
+            </span>
+            <span className="mt-1 text-[10px] text-[#A89A8C]">PNG, JPG, WEBP, AVIF</span>
             <input type="file" multiple accept="image/*" onChange={handleFiles} className="hidden" disabled={uploading} />
           </label>
 
           {/* Direct URL input fallback */}
-          <div className="mt-3 flex gap-2">
+          <div className="mt-4 flex gap-2">
             <input
               type="text"
               placeholder="Or enter image URL (/images/...)"
@@ -202,24 +232,24 @@ export default function ProductForm({ product }: { product?: ProductType }) {
                   addImageUrl();
                 }
               }}
-              className="flex-1 border border-neutral-300 px-3 py-2 text-xs outline-none focus:border-black"
+              className="flex-1 rounded-xl border border-white/15 bg-[#241E1A] px-3.5 py-2.5 text-xs text-white placeholder-white/30 outline-none focus:border-[#D6B27C]"
             />
             <button
               type="button"
               onClick={addImageUrl}
-              className="bg-black text-white px-3 py-2 text-xs font-semibold uppercase tracking-wider hover:bg-neutral-800 transition"
+              className="rounded-xl bg-[#D6B27C] text-[#120F0D] px-4 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-[#C29B38] transition shadow-md"
             >
               + Add
             </button>
           </div>
 
           {images.length > 0 && (
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="mt-4 grid grid-cols-3 gap-2.5">
               {images.map((img, i) => (
-                <div key={img.public_id || img.url || i} className="group relative aspect-square bg-neutral-200 rounded overflow-hidden">
+                <div key={img.public_id || img.url || i} className="group relative aspect-square rounded-xl bg-white/5 border border-white/10 overflow-hidden">
                   <img src={img.url} alt="" className="h-full w-full object-cover" />
                   {i === 0 && (
-                    <span className="absolute left-0 top-0 bg-black px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-white">
+                    <span className="absolute left-1.5 top-1.5 rounded bg-[#120F0D]/90 text-[#D6B27C] border border-[#D6B27C]/40 px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider">
                       Main
                     </span>
                   )}
@@ -227,9 +257,9 @@ export default function ProductForm({ product }: { product?: ProductType }) {
                     type="button"
                     onClick={() => setImages(images.filter((_, idx) => idx !== i))}
                     aria-label="Remove image"
-                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center bg-black/80 rounded text-xs text-white opacity-0 transition group-hover:opacity-100"
+                    className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs text-white opacity-0 transition group-hover:opacity-100 shadow-md"
                   >
-                    ✕
+                    <X size={12} />
                   </button>
                 </div>
               ))}
@@ -237,27 +267,40 @@ export default function ProductForm({ product }: { product?: ProductType }) {
           )}
         </div>
 
-        <div className="space-y-3 border border-neutral-200 bg-white p-6">
-          <h2 className="mb-1 text-sm font-semibold uppercase tracking-widest">Visibility</h2>
-          <Toggle checked={form.soldOut} onChange={(v) => setForm({ ...form, soldOut: v })} label="Mark as sold out" />
-          <Toggle checked={form.featured} onChange={(v) => setForm({ ...form, featured: v })} label="Show on home page" />
+        <div className="space-y-3.5 rounded-2xl border border-white/10 bg-[#181311] p-6 text-[#FAF7F2]">
+          <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-[#D6B27C]">
+            Visibility &amp; Curation
+          </h2>
+          <Toggle checked={form.soldOut} onChange={(v) => setForm({ ...form, soldOut: v })} label="Mark Reserve as Sold Out" />
+          <Toggle checked={form.featured} onChange={(v) => setForm({ ...form, featured: v })} label="Curate on Home Page (Featured)" />
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 pt-2">
           <button
             type="submit"
             disabled={saving || uploading}
-            className="flex-1 bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:opacity-50"
+            className="flex-1 rounded-full bg-[#D6B27C] hover:bg-[#C29B38] text-[#120F0D] py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-xl disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {saving ? "Saving..." : product ? "Update product" : "Add product"}
+            {saving ? (
+              <span>Saving Offering...</span>
+            ) : product ? (
+              <>
+                <Check size={16} strokeWidth={2.5} />
+                <span>Update Offering</span>
+              </>
+            ) : (
+              <>
+                <Plus size={16} strokeWidth={2.5} />
+                <span>Publish Offering</span>
+              </>
+            )}
           </button>
-          <button
-            type="button"
-            onClick={() => router.push("/admin/products")}
-            className="border border-black px-5 py-3 text-sm transition hover:bg-black hover:text-white"
+          <Link
+            href="/admin/products"
+            className="rounded-full border border-white/20 hover:border-[#D6B27C] text-white px-6 py-4 text-xs font-bold uppercase tracking-widest transition-colors flex items-center justify-center"
           >
             Cancel
-          </button>
+          </Link>
         </div>
       </div>
     </form>

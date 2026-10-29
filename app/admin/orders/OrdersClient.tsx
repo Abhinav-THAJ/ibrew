@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { formatPrice } from "@/data/products";
 import type { OrderType } from "@/models/order";
 
-const STATUS_COLORS: Record<string, string> = {
-  confirmed: "bg-emerald-100 text-emerald-800 border-emerald-300",
-  processing: "bg-amber-100 text-amber-800 border-amber-300",
-  shipped: "bg-blue-100 text-blue-800 border-blue-300",
-  delivered: "bg-purple-100 text-purple-800 border-purple-300",
-  cancelled: "bg-rose-100 text-rose-800 border-rose-300",
-  pending: "bg-neutral-100 text-neutral-800 border-neutral-300",
+const STATUS_BADGES: Record<string, string> = {
+  confirmed: "bg-emerald-950/70 text-emerald-300 border-emerald-500/40",
+  processing: "bg-amber-950/70 text-amber-300 border-amber-500/40",
+  shipped: "bg-blue-950/70 text-blue-300 border-blue-500/40",
+  delivered: "bg-purple-950/70 text-purple-300 border-purple-500/40",
+  cancelled: "bg-rose-950/70 text-rose-300 border-rose-500/40",
+  pending: "bg-neutral-800 text-neutral-300 border-neutral-600",
 };
 
 export default function OrdersClient({ initialOrders }: { initialOrders: OrderType[] }) {
@@ -42,27 +41,27 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderTy
 
   if (orders.length === 0) {
     return (
-      <div className="rounded-xl border border-neutral-200 bg-white p-12 text-center">
-        <p className="text-neutral-500 text-sm">No patron orders have been placed yet.</p>
+      <div className="rounded-2xl border border-white/10 bg-[#181311] p-16 text-center text-xs text-[#A89A8C]">
+        No patron orders have been placed yet.
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="overflow-x-auto rounded-xl border border-neutral-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-neutral-200 bg-neutral-50 text-xs uppercase tracking-wider text-neutral-500">
+    <div className="rounded-2xl border border-white/10 bg-[#181311] overflow-hidden shadow-xl text-[#FAF7F2]">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[760px] text-left text-xs">
+          <thead className="bg-[#201A17] text-[11px] uppercase tracking-wider text-[#D6B27C] border-b border-white/10">
             <tr>
-              <th className="py-4 px-6">Order</th>
-              <th className="py-4 px-6">Patron Details</th>
-              <th className="py-4 px-6">Items</th>
-              <th className="py-4 px-6">Amount</th>
-              <th className="py-4 px-6">Payment</th>
-              <th className="py-4 px-6">Status</th>
+              <th className="py-4 px-6 font-bold">Order Reference</th>
+              <th className="py-4 px-6 font-bold">Patron Information</th>
+              <th className="py-4 px-6 font-bold">Items</th>
+              <th className="py-4 px-6 font-bold">Total Amount</th>
+              <th className="py-4 px-6 font-bold">Payment Method</th>
+              <th className="py-4 px-6 font-bold">Fulfillment Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-200">
+          <tbody className="divide-y divide-white/8">
             {orders.map((o) => {
               const dateStr = o.createdAt
                 ? new Date(o.createdAt).toLocaleDateString("en-IN", {
@@ -73,19 +72,19 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderTy
                 : "Recent";
 
               return (
-                <tr key={o._id} className="hover:bg-neutral-50/50 transition">
+                <tr key={o._id} className="hover:bg-white/5 transition-colors">
                   <td className="py-4 px-6 align-top">
-                    <span className="font-mono font-bold text-black">{o.orderNumber}</span>
-                    <span className="block text-xs text-neutral-400 mt-0.5">{dateStr}</span>
+                    <span className="font-mono font-bold text-white text-sm block">{o.orderNumber}</span>
+                    <span className="text-[11px] text-[#A89A8C] mt-1 block">{dateStr}</span>
                   </td>
 
                   <td className="py-4 px-6 align-top max-w-[220px]">
-                    <span className="font-semibold text-neutral-900 block">{o.customerName}</span>
-                    <span className="text-xs text-neutral-500 block truncate">{o.customerEmail}</span>
+                    <span className="font-semibold text-white block text-sm">{o.customerName}</span>
+                    <span className="text-xs text-[#C4B7A7] block truncate mt-0.5">{o.customerEmail}</span>
                     {o.customerPhone && (
-                      <span className="text-xs text-neutral-500 block">{o.customerPhone}</span>
+                      <span className="text-xs text-[#A89A8C] block mt-0.5">{o.customerPhone}</span>
                     )}
-                    <span className="text-xs text-neutral-400 block mt-1 truncate">
+                    <span className="text-[11px] text-[#8C7E72] block mt-1.5 truncate">
                       {o.city} • {o.postalCode}
                     </span>
                   </td>
@@ -95,32 +94,32 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderTy
                       {o.items?.map((item, idx) => (
                         <div key={idx} className="flex items-center gap-2.5 text-xs">
                           {item.image && (
-                            <div className="relative h-8 w-8 shrink-0 rounded bg-neutral-100 overflow-hidden border border-neutral-200">
+                            <div className="relative h-8 w-8 shrink-0 rounded-lg bg-white/5 overflow-hidden border border-white/10">
                               <img src={item.image} alt="" className="h-full w-full object-cover" />
                             </div>
                           )}
-                          <span className="font-medium text-neutral-800 truncate max-w-[150px]">
+                          <span className="font-medium text-white truncate max-w-[160px]">
                             {item.name}
                           </span>
-                          <span className="text-neutral-500">×{item.quantity}</span>
+                          <span className="text-[#D6B27C] font-mono">×{item.quantity}</span>
                         </div>
                       ))}
                     </div>
                   </td>
 
                   <td className="py-4 px-6 align-top">
-                    <span className="font-bold text-neutral-900 font-serif text-base">
+                    <span className="font-bold text-[#D6B27C] font-serif text-base block">
                       {formatPrice(o.totalAmount)}
                     </span>
                     {o.discount > 0 && (
-                      <span className="block text-[11px] text-emerald-600 font-medium">
+                      <span className="text-[10px] text-[#68D391] font-semibold mt-0.5 block">
                         Privilege: -{formatPrice(o.discount)}
                       </span>
                     )}
                   </td>
 
                   <td className="py-4 px-6 align-top">
-                    <span className="inline-block text-xs uppercase font-semibold text-neutral-600 bg-neutral-100 px-2.5 py-1 rounded">
+                    <span className="inline-block text-[11px] uppercase tracking-wider font-semibold text-white/90 bg-[#241E1A] border border-white/10 px-3 py-1 rounded-full">
                       {o.paymentMethod === "cod" ? "Pay on Delivery" : "Online Verified"}
                     </span>
                   </td>
@@ -130,15 +129,15 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderTy
                       value={o.status}
                       disabled={updatingId === o._id}
                       onChange={(e) => updateStatus(o._id, e.target.value)}
-                      className={`text-xs font-semibold px-2.5 py-1 rounded border capitalize cursor-pointer outline-none ${
-                        STATUS_COLORS[o.status] || STATUS_COLORS.confirmed
+                      className={`text-xs font-bold px-3 py-1.5 rounded-full border capitalize cursor-pointer outline-none transition-colors ${
+                        STATUS_BADGES[o.status] || STATUS_BADGES.confirmed
                       }`}
                     >
-                      <option value="confirmed">Confirmed</option>
-                      <option value="processing">Processing</option>
-                      <option value="shipped">Shipped</option>
-                      <option value="delivered">Delivered</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option value="confirmed" className="bg-[#181311] text-emerald-300">Confirmed</option>
+                      <option value="processing" className="bg-[#181311] text-amber-300">Processing</option>
+                      <option value="shipped" className="bg-[#181311] text-blue-300">Shipped</option>
+                      <option value="delivered" className="bg-[#181311] text-purple-300">Delivered</option>
+                      <option value="cancelled" className="bg-[#181311] text-rose-300">Cancelled</option>
                     </select>
                   </td>
                 </tr>
