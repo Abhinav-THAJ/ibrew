@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import CategoryModel from "@/models/category";
 
+
+
 const DEFAULT_CATEGORIES = [
   {
     name: "Estate Coffee",

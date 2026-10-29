@@ -3,6 +3,8 @@ import connectDB from "@/lib/mongodb";
 import Product from "@/models/product";
 import { INITIAL_PRODUCTS } from "@/data/products";
 
+
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();

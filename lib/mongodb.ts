@@ -1,10 +1,5 @@
 import mongoose from "mongoose";
 
-const raw = process.env.MONGODB_URI ?? "";
-const MONGODB_URI = raw.trim().replace(/^["']|["']$/g, "");
-
-if (!MONGODB_URI) throw new Error("Define MONGODB_URI in .env.local");
-
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -19,8 +14,21 @@ const cached: MongooseCache =
   global.mongooseCache ?? (global.mongooseCache = { conn: null, promise: null });
 
 export default async function connectDB() {
+  const raw = process.env.MONGODB_URI ?? "";
+  const MONGODB_URI = raw.trim().replace(/^["']|["']$/g, "");
+
+  if (!MONGODB_URI) {
+    throw new Error(
+      "Define MONGODB_URI in your environment variables (or .env.local / Vercel Environment Variables)"
+    );
+  }
+
   if (cached.conn) return cached.conn;
-  if (!cached.promise) cached.promise = mongoose.connect(MONGODB_URI);
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false,
+    });
+  }
   try {
     cached.conn = await cached.promise;
   } catch (e) {
@@ -29,3 +37,4 @@ export default async function connectDB() {
   }
   return cached.conn;
 }
+

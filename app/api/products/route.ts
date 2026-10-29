@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/product";
 
+
+
 export async function GET(req: NextRequest) {
   await connectDB();
 

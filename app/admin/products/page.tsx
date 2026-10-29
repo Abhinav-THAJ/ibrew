@@ -4,6 +4,8 @@ import { connection } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product, { ProductType } from "@/models/product";
 import ProductsTable from "./ProductsTable";
+
+
 import { Plus } from "lucide-react";
 
 async function ProductsData() {
